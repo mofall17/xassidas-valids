@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi des Tâches Quotidiennes</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e10;
+    --surface: #18181c;
+    --surface2: #222228;
+    --border: #2e2e38;
+    --accent: #f0c46a;
+    --accent2: #e07b54;
+    --text: #f0ede8;
+    --text-muted: #888898;
+    --green: #6bcf9e;
+    --red: #e07b7b;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .logo span { color: var(--text-muted); font-size: 0.9rem; font-family: 'DM Mono', monospace; }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .date-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 10px;
+  }
+
+  .date-nav button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: background .15s, color .15s;
+  }
+  .date-nav button:hover { background: var(--border); color: var(--text); }
+
+  #currentDate {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    min-width: 110px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--accent);
+  }
+  #currentDate::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+
+  /* PERSON SELECTOR */
+  .person-bar {
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .person-bar label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  .person-chip {
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .person-chip:hover { border-color: var(--accent); color: var(--text); }
+  .person-chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #1a1200;
+    font-weight: 600;
+  }
+
+  .add-person-btn {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1.5px dashed var(--border);
+    background: none;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .add-person-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 999px;
+    color: var(--text-muted);
+  }
+
+  /* ADD TASK FORM */
+  .add-task-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .task-input {
+    flex: 1;
+    min-width: 200px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .task-input:focus { border-color: var(--accent); }
+  .task-input::placeholder { color: var(--text-muted); }
+
+  .btn-add {
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--accent);
+    color: #1a1200;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: opacity .2s, transform .1s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-add:hover { opacity: .88; }
+  .btn-add:active { transform: scale(0.97); }
+
+  /* TASK LIST */
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .task-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color .2s, background .2s;
+    animation: fadeIn .25s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .task-card:hover { border-color: #444458; }
+
+  .task-card.all-done {
+    background: rgba(107, 207, 158, 0.06);
+    border-color: rgba(107, 207, 158, 0.25);
+  }
+
+  .task-name {
+    flex: 1;
+    font-size: 0.92rem;
+    color: var(--text);
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  /* VALIDATORS */
+  .validators {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .validator-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+    title: attr(title);
+    position: relative;
+    text-transform: uppercase;
+  }
+
+  .validator-dot:hover {
+    border-color: var(--accent);
+    color: var(--text);
+    transform: scale(1.1);
+  }
+
+  .validator-dot.checked {
+    background: var(--green);
+    border-color: var(--green);
+    color: #0a2a1c;
+  }
+
+  .validator-dot .tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: var(--text);
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 10;
+  }
+  .validator-dot:hover .tooltip { opacity: 1; }
+
+  .check-all-dot {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color .15s;
+    white-space: nowrap;
+    font-family: 'DM Mono', monospace;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface2);
+  }
+  .check-all-dot:hover { color: var(--accent); border-color: var(--accent); }
+
+  .task-actions {
+    display: flex;
+    gap: 4px;
+  }
+
+  .btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background .15s, color .15s;
+    line-height: 1;
+  }
+  .btn-icon:hover { background: var(--surface2); color: var(--red); }
+
+  /* PROGRESS */
+  .progress-section {
+    margin-bottom: 28px;
+  }
+
+  .progress-bar-wrap {
+    background: var(--surface2);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    border-radius: 999px;
+    transition: width .4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .progress-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* PERSON SUMMARY TABLE */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+    margin-top: 8px;
+  }
+  .summary-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+  .summary-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .summary-table tr:hover td { background: var(--surface2); }
+
+  .pct-bar {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 999px;
+    overflow: hidden;
+    width: 80px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 8px;
+  }
+  .pct-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 999px;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  .empty-state .emoji { font-size: 2rem; margin-bottom: 10px; }
+
+  /* MODALS */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 999;
+    backdrop-filter: blur(3px);
+    animation: fadeIn .15s;
+  }
+  .modal {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    width: 340px;
+    max-width: 95vw;
+  }
+  .modal h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+  }
+  .modal input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    margin-bottom: 14px;
+    transition: border-color .2s;
+  }
+  .modal input:focus { border-color: var(--accent); }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .btn-cancel {
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+  }
+  .btn-cancel:hover { color: var(--text); }
+  .btn-confirm {
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--accent);
+    color: #1a1200;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+  }
+
+  /* SECTION DIVIDER */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* IMPORT/EXPORT */
+  .tools-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 12px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .btn-tool {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: none;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    transition: all .2s;
+  }
+  .btn-tool:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    header, .person-bar, .tools-bar { padding: 14px 16px; }
+    main { padding: 20px 14px; }
+    .task-card { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CheckDay <span>— suivi quotidien</span></div>
+  <div class="header-right">
+    <div class="date-nav">
+      <button onclick="changeDay(-1)" title="Jour précédent">‹</button>
+      <input type="date" id="currentDate" onchange="loadDay()">
+      <button onclick="changeDay(1)" title="Jour suivant">›</button>
+    </div>
+    <button class="btn-add" onclick="goToday()" style="padding:8px 14px;font-size:0.8rem;">Aujourd'hui</button>
+  </div>
+</header>
+
+<div class="person-bar">
+  <label>Intervenants :</label>
+  <div id="personChips"></div>
+  <button class="add-person-btn" onclick="showAddPerson()">＋ Ajouter</button>
+</div>
+
+<div class="tools-bar">
+  <button class="btn-tool" onclick="copyTasksFromDay(-1)">⬆ Copier tâches d'hier</button>
+  <button class="btn-tool" onclick="exportCSV()">⤓ Exporter CSV</button>
+  <button class="btn-tool" onclick="clearDayTasks()">✕ Vider le jour</button>
+</div>
+
+<main>
+  <!-- Progression globale -->
+  <div class="progress-section">
+    <div class="section-header">
+      <div class="section-title">Progression du jour <span id="progressBadge" class="badge">0 / 0</span></div>
+      <span id="progressPct" style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--text-muted)">0%</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Ajouter une tâche -->
+  <div class="section-header">
+    <div class="section-title">Tâches du jour</div>
+  </div>
+  <div class="add-task-form">
+    <input class="task-input" id="newTaskInput" placeholder="Nouvelle tâche…" onkeydown="if(event.key==='Enter')addTask()">
+    <button class="btn-add" onclick="addTask()">＋ Ajouter</button>
+  </div>
+
+  <div class="task-list" id="taskList"></div>
+
+  <hr class="section-divider">
+
+  <!-- Tableau récapitulatif par personne -->
+  <div class="section-header">
+    <div class="section-title">Récapitulatif par intervenant</div>
+  </div>
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+    <table class="summary-table" id="summaryTable">
+      <thead><tr>
+        <th>Intervenant</th>
+        <th>Validées</th>
+        <th>Restantes</th>
+        <th>Progression</th>
+      </tr></thead>
+      <tbody id="summaryBody"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal ajout personne -->
+<div class="modal-overlay" id="personModal" style="display:none">
+  <div class="modal">
+    <h3>Ajouter un intervenant</h3>
+    <input type="text" id="personNameInput" placeholder="Nom de la personne…" maxlength="24"
+           onkeydown="if(event.key==='Enter')confirmAddPerson()">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="hideModal('personModal')">Annuler</button>
+      <button class="btn-confirm" onclick="confirmAddPerson()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────────
+// data structure:
+// {
+//   persons: ["Alice", "Bob", ...],
+//   days: {
+//     "2025-03-27": {
+//       tasks: [ { id, name } ],
+//       checks: { taskId: { personName: true/false } }
+//     }
+//   }
+// }
+
+let state = { persons: [], days: {} };
+let selectedDate = todayStr();
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('checkday_state');
+    if (s) state = JSON.parse(s);
+  } catch(e) {}
+}
+
+function saveState() {
+  localStorage.setItem('checkday_state', JSON.stringify(state));
+}
+
+function getDayData(date) {
+  if (!state.days[date]) state.days[date] = { tasks: [], checks: {} };
+  return state.days[date];
+}
+
+// ─── DATE ─────────────────────────────────────────────────────────────────────
+function changeDay(delta) {
+  const d = new Date(selectedDate);
+  d.setDate(d.getDate() + delta);
+  selectedDate = d.toISOString().slice(0, 10);
+  document.getElementById('currentDate').value = selectedDate;
+  render();
+}
+
+function loadDay() {
+  selectedDate = document.getElementById('currentDate').value;
+  render();
+}
+
+function goToday() {
+  selectedDate = todayStr();
+  document.getElementById('currentDate').value = selectedDate;
+  render();
+}
+
+// ─── PERSONS ──────────────────────────────────────────────────────────────────
+function renderPersonChips() {
+  const el = document.getElementById('personChips');
+  el.innerHTML = '';
+  state.persons.forEach(p => {
+    const chip = document.createElement('button');
+    chip.className = 'person-chip';
+    chip.innerHTML = `<span>${initials(p)}</span> ${p}`;
+    chip.title = p;
+    el.appendChild(chip);
+  });
+}
+
+function initials(name) {
+  return name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+}
+
+function showAddPerson() {
+  document.getElementById('personNameInput').value = '';
+  document.getElementById('personModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('personNameInput').focus(), 50);
+}
+
+function confirmAddPerson() {
+  const name = document.getElementById('personNameInput').value.trim();
+  if (!name) return;
+  if (state.persons.includes(name)) { alert('Cette personne existe déjà.'); return; }
+  state.persons.push(name);
+  saveState();
+  hideModal('personModal');
+  render();
+}
+
+function hideModal(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+// ─── TASKS ────────────────────────────────────────────────────────────────────
+function addTask() {
+  const input = document.getElementById('newTaskInput');
+  const name = input.value.trim();
+  if (!name) return;
+  const day = getDayData(selectedDate);
+  const id = 't_' + Date.now();
+  day.tasks.push({ id, name });
+  day.checks[id] = {};
+  state.persons.forEach(p => { day.checks[id][p] = false; });
+  input.value = '';
+  saveState();
+  renderTaskList();
+  renderSummary();
+  renderProgress();
+}
+
+function deleteTask(id) {
+  const day = getDayData(selectedDate);
+  day.tasks = day.tasks.filter(t => t.id !== id);
+  delete day.checks[id];
+  saveState();
+  renderTaskList();
+  renderSummary();
+  renderProgress();
+}
+
+function toggleCheck(taskId, person) {
+  const day = getDayData(selectedDate);
+  if (!day.checks[taskId]) day.checks[taskId] = {};
+  day.checks[taskId][person] = !day.checks[taskId][person];
+  saveState();
+  renderTaskList();
+  renderSummary();
+  renderProgress();
+}
+
+function isTaskFullyDone(taskId, day) {
+  if (!state.persons.length) return false;
+  return state.persons.every(p => day.checks[taskId] && day.checks[taskId][p]);
+}
+
+function copyTasksFromDay(delta) {
+  const d = new Date(selectedDate);
+  d.setDate(d.getDate() + delta);
+  const srcDate = d.toISOString().slice(0, 10);
+  const src = state.days[srcDate];
+  if (!src || !src.tasks.length) {
+    alert('Aucune tâche trouvée pour ' + formatDate(srcDate));
+    return;
+  }
+  const day = getDayData(selectedDate);
+  src.tasks.forEach(t => {
+    if (!day.tasks.find(x => x.name === t.name)) {
+      const id = 't_' + Date.now() + Math.random();
+      day.tasks.push({ id, name: t.name });
+      day.checks[id] = {};
+      state.persons.forEach(p => { day.checks[id][p] = false; });
+    }
+  });
+  saveState();
+  render();
+}
+
+function clearDayTasks() {
+  if (!confirm('Vider toutes les tâches de ce jour ?')) return;
+  state.days[selectedDate] = { tasks: [], checks: {} };
+  saveState();
+  render();
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function render() {
+  renderPersonChips();
+  renderTaskList();
+  renderSummary();
+  renderProgress();
+}
+
+function renderTaskList() {
+  const day = getDayData(selectedDate);
+  const container = document.getElementById('taskList');
+  container.innerHTML = '';
+
+  if (!day.tasks.length) {
+    container.innerHTML = `<div class="empty-state"><div class="emoji">📋</div>Aucune tâche pour ce jour.<br>Ajoutez-en une ou copiez depuis un jour précédent.</div>`;
+    return;
+  }
+
+  day.tasks.forEach(task => {
+    const allDone = isTaskFullyDone(task.id, day);
+    const card = document.createElement('div');
+    card.className = 'task-card' + (allDone ? ' all-done' : '');
+
+    // Done indicator
+    const doneIcon = document.createElement('span');
+    doneIcon.style.cssText = 'font-size:1.1rem;flex-shrink:0;';
+    doneIcon.textContent = allDone ? '✅' : '⬜';
+    card.appendChild(doneIcon);
+
+    // Name
+    const nameEl = document.createElement('div');
+    nameEl.className = 'task-name';
+    nameEl.textContent = task.name;
+    if (allDone) nameEl.style.textDecoration = 'line-through';
+    if (allDone) nameEl.style.color = 'var(--text-muted)';
+    card.appendChild(nameEl);
+
+    // Validators
+    const validators = document.createElement('div');
+    validators.className = 'validators';
+
+    if (!state.persons.length) {
+      const hint = document.createElement('span');
+      hint.style.cssText = 'font-size:0.75rem;color:var(--text-muted);font-family:DM Mono,monospace;';
+      hint.textContent = 'Ajoutez des intervenants';
+      validators.appendChild(hint);
+    } else {
+      state.persons.forEach(p => {
+        const checked = day.checks[task.id] && day.checks[task.id][p];
+        const dot = document.createElement('div');
+        dot.className = 'validator-dot' + (checked ? ' checked' : '');
+        dot.title = p + (checked ? ' ✓' : '');
+        dot.innerHTML = `${initials(p)}<span class="tooltip">${p}${checked ? ' ✓' : ''}</span>`;
+        dot.onclick = () => toggleCheck(task.id, p);
+        validators.appendChild(dot);
+      });
+    }
+
+    card.appendChild(validators);
+
+    // Delete
+    const actions = document.createElement('div');
+    actions.className = 'task-actions';
+    const del = document.createElement('button');
+    del.className = 'btn-icon';
+    del.title = 'Supprimer';
+    del.textContent = '✕';
+    del.onclick = () => deleteTask(task.id);
+    actions.appendChild(del);
+    card.appendChild(actions);
+
+    container.appendChild(card);
+  });
+}
+
+function renderProgress() {
+  const day = getDayData(selectedDate);
+  const total = day.tasks.length * Math.max(state.persons.length, 1);
+  let done = 0;
+  day.tasks.forEach(t => {
+    state.persons.forEach(p => {
+      if (day.checks[t.id] && day.checks[t.id][p]) done++;
+    });
+  });
+
+  const tasksDone = day.tasks.filter(t => isTaskFullyDone(t.id, day)).length;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressBadge').textContent = `${tasksDone} / ${day.tasks.length} tâches complètes`;
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function renderSummary() {
+  const day = getDayData(selectedDate);
+  const tbody = document.getElementById('summaryBody');
+  tbody.innerHTML = '';
+
+  if (!state.persons.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-muted);text-align:center;padding:20px;">Aucun intervenant configuré.</td></tr>';
+    return;
+  }
+
+  state.persons.forEach(p => {
+    const total = day.tasks.length;
+    let done = 0;
+    day.tasks.forEach(t => {
+      if (day.checks[t.id] && day.checks[t.id][p]) done++;
+    });
+    const pct = total > 0 ? Math.round(done / total * 100) : 0;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><b>${p}</b></td>
+      <td style="color:var(--green);font-family:'DM Mono',monospace;">${done}</td>
+      <td style="color:${total-done>0?'var(--accent2)':'var(--text-muted)'};font-family:'DM Mono',monospace;">${total - done}</td>
+      <td>
+        <span style="font-family:'DM Mono',monospace;font-size:0.8rem;">${pct}%</span>
+        <span class="pct-bar"><span class="pct-bar-fill" style="width:${pct}%"></span></span>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ─── EXPORT ───────────────────────────────────────────────────────────────────
+function exportCSV() {
+  const day = getDayData(selectedDate);
+  if (!day.tasks.length) { alert('Aucune tâche à exporter.'); return; }
+
+  let csv = 'Tâche,' + state.persons.join(',') + ',Statut\n';
+  day.tasks.forEach(t => {
+    const row = ['"' + t.name.replace(/"/g,'""') + '"'];
+    state.persons.forEach(p => {
+      row.push(day.checks[t.id] && day.checks[t.id][p] ? '✓' : '');
+    });
+    row.push(isTaskFullyDone(t.id, day) ? 'Complète' : 'En cours');
+    csv += row.join(',') + '\n';
+  });
+
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `taches_${selectedDate}.csv`;
+  a.click();
+}
+
+function formatDate(str) {
+  const d = new Date(str + 'T12:00:00');
+  return d.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long' });
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadState();
+selectedDate = todayStr();
+document.getElementById('currentDate').value = selectedDate;
+render();
+</script>
+</body>
+</html>
