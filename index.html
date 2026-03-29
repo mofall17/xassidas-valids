@@ -575,6 +575,50 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
 
+  /* ── PDF UPLOAD ── */
+  .pdf-drop-zone {
+    border: 2px dashed var(--border2);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    background: var(--surface);
+    position: relative;
+  }
+  .pdf-drop-zone:hover, .pdf-drop-zone.drag-over { border-color: var(--gold); background: rgba(212,168,75,0.05); }
+  .pdf-drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .pdf-drop-zone .drop-icon { font-size: 28px; margin-bottom: 6px; }
+  .pdf-drop-zone .drop-text { font-size: 13px; color: var(--text2); }
+  .pdf-info {
+    background: rgba(212,168,75,0.08);
+    border: 1px solid rgba(212,168,75,0.3);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    display: none;
+    gap: 12px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .pdf-info.show { display: flex; }
+  .pdf-info .pdf-pages { color: var(--gold); font-weight: 600; font-size: 18px; }
+  .pdf-pages-detail { color: var(--text2); font-size: 12px; margin-top: 2px; }
+  .pdf-split-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .pdf-split-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .pdf-split-chip.active { background: rgba(212,168,75,0.15); border-color: var(--gold); color: var(--gold2); }
+
   @media (max-width: 600px) {
     .topbar { padding: 0 12px; gap: 8px; }
     .topbar-logo { font-size: 16px; }
@@ -584,6 +628,7 @@
     .nav-tab { padding: 5px 8px; font-size: 12px; }
   }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -696,10 +741,37 @@
             <input type="text" id="admin-book-icon" placeholder="📖" maxlength="4" style="width:80px">
           </div>
         </div>
+        <!-- PDF Upload -->
+        <div>
+          <label class="form-label" style="margin-bottom:8px;display:block">PDF du livre (optionnel)</label>
+          <div class="pdf-drop-zone" id="pdf-drop-zone">
+            <input type="file" id="pdf-file-input" accept=".pdf" onchange="handlePdfUpload(this.files[0])">
+            <div class="drop-icon">📄</div>
+            <div class="drop-text">Glisse le PDF ici ou clique pour choisir</div>
+          </div>
+          <div class="pdf-info" id="pdf-info">
+            <div>
+              <div class="pdf-pages" id="pdf-page-count">–</div>
+              <div class="pdf-pages-detail">pages détectées</div>
+            </div>
+            <div style="flex:1">
+              <div style="color:var(--text);font-size:13px;margin-bottom:6px" id="pdf-filename"></div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="color:var(--text2);font-size:12px">Nombre de parties :</span>
+                <input type="number" id="pdf-parts-count" min="1" max="50" value="2" style="width:60px;padding:4px 8px;font-size:13px" oninput="updatePdfSplit()">
+                <button class="btn btn-gold btn-sm" onclick="applyPdfSplit()">Découper</button>
+              </div>
+              <div class="pdf-split-preview" id="pdf-split-preview"></div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="clearPdf()" style="align-self:flex-start">✕</button>
+          </div>
+        </div>
+
+        <!-- Parties manuelles -->
         <div>
           <label class="form-label" style="margin-bottom:8px;display:block">Parties</label>
           <div class="parts-builder" id="admin-parts-builder"></div>
-          <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addPartField()">+ Ajouter une partie</button>
+          <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addPartField()">+ Ajouter une partie manuellement</button>
         </div>
         <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px">
           <button class="btn btn-gold" onclick="adminAddBook()">Ajouter le livre</button>
@@ -970,25 +1042,34 @@ function startCountdown() {
 }
 
 // ── LOAD BOOKS ──
+let renderToken = 0;
 function loadBooks() {
   if (booksUnsubscribe) booksUnsubscribe();
+  renderToken++;
+  const myToken = renderToken;
   const grid = document.getElementById('books-grid');
   grid.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>Chargement...</p></div>';
 
   const q = query(collection(db, COL_BOOKS), where('date','==',currentDateStr));
   booksUnsubscribe = onSnapshot(q, async (snap) => {
+    if (myToken !== renderToken) return;
+
+    // Mémoriser les cartes ouvertes avant re-rendu
+    const openCards = new Set();
+    document.querySelectorAll('.parts-container.open').forEach(el => {
+      openCards.add(el.id.replace('parts-', ''));
+    });
+
     if (snap.empty) {
-      grid.innerHTML = `<div class="empty-state"><div class="icon">📚</div><p>Aucun livre programmé pour ce jour.</p>${isAdmin?'<button class="btn btn-gold btn-sm" onclick="switchTab(\'admin\');setTimeout(()=>{document.getElementById(\'admin-tab\').dispatchEvent(new Event(\'click\'))},0)">+ Ajouter via Admin</button>':''}</div>`;
+      grid.innerHTML = '<div class="empty-state"><div class="icon">📚</div><p>Aucun livre programmé pour ce jour.</p>' + (isAdmin ? '<button class="btn btn-gold btn-sm" onclick="switchTab('admin')">+ Ajouter via Admin</button>' : '') + '</div>';
       return;
     }
-    grid.innerHTML = '';
+    const books = [];
     for (const bookDoc of snap.docs) {
       const book = { id: bookDoc.id, ...bookDoc.data() };
-      // Load parts + reservations for this book
       const partsSnap = await getDocs(collection(db, COL_BOOKS, book.id, 'parts'));
       const partsArr = partsSnap.docs.map(p => ({ id: p.id, ...p.data() }));
       partsArr.sort((a,b) => (a.order||0)-(b.order||0));
-      // Load reservations
       const resSnap = await getDocs(query(collection(db, COL_RESERVATIONS), where('bookId','==',book.id)));
       const reservations = {};
       resSnap.forEach(r => {
@@ -996,10 +1077,23 @@ function loadBooks() {
         if (!reservations[d.partId]) reservations[d.partId] = [];
         reservations[d.partId].push({ id: r.id, ...d });
       });
-      grid.appendChild(renderBookCard(book, partsArr, reservations));
+      books.push({ book, partsArr, reservations });
     }
+    if (myToken !== renderToken) return;
+    grid.innerHTML = '';
+    books.forEach(({ book, partsArr, reservations }) => {
+      const card = renderBookCard(book, partsArr, reservations);
+      grid.appendChild(card);
+      // Rouvrir les cartes qui étaient ouvertes avant
+      if (openCards.has(book.id)) {
+        const container = card.querySelector('#parts-' + book.id);
+        const chevron = card.querySelector('#chevron-' + book.id);
+        if (container) container.classList.add('open');
+        if (chevron) chevron.classList.add('open');
+      }
+    });
   }, (err) => {
-    grid.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Erreur Firestore : ' + err.message + '</p></div>';
+    grid.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Erreur : ' + err.message + '</p></div>';
     console.error(err);
   });
 }
@@ -1197,6 +1291,100 @@ async function submitProposal() {
     toast('Proposition envoyée à l\'admin ! 💡', 'success');
   } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
+
+// ── PDF HANDLING ──
+let pdfPageCount = 0;
+let pdfFileName = '';
+
+// Configure PDF.js worker
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+window.handlePdfUpload = async function(file) {
+  if (!file || file.type !== 'application/pdf') { toast('Fichier PDF requis', 'error'); return; }
+  pdfFileName = file.name;
+
+  // Configure worker
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    pdfPageCount = pdf.numPages;
+
+    document.getElementById('pdf-page-count').textContent = pdfPageCount;
+    document.getElementById('pdf-filename').textContent = '📄 ' + pdfFileName;
+    document.getElementById('pdf-info').classList.add('show');
+    document.getElementById('pdf-drop-zone').style.display = 'none';
+    updatePdfSplit();
+    toast(pdfPageCount + ' pages détectées !', 'success');
+  } catch(e) {
+    toast('Erreur lecture PDF : ' + e.message, 'error');
+    console.error(e);
+  }
+};
+
+window.updatePdfSplit = function() {
+  if (!pdfPageCount) return;
+  const n = parseInt(document.getElementById('pdf-parts-count').value) || 1;
+  const pagesPerPart = Math.floor(pdfPageCount / n);
+  const remainder = pdfPageCount % n;
+  const preview = document.getElementById('pdf-split-preview');
+  preview.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const start = i * pagesPerPart + 1 + (i < remainder ? i : remainder);
+    const extra = i < remainder ? 1 : 0;
+    const end = start + pagesPerPart - 1 + extra;
+    const chip = document.createElement('div');
+    chip.className = 'pdf-split-chip active';
+    chip.textContent = 'Partie ' + (i+1) + ' : p.' + start + '–' + end;
+    preview.appendChild(chip);
+  }
+};
+
+window.applyPdfSplit = function() {
+  if (!pdfPageCount) return;
+  const n = parseInt(document.getElementById('pdf-parts-count').value) || 1;
+  const pagesPerPart = Math.floor(pdfPageCount / n);
+  const remainder = pdfPageCount % n;
+
+  adminPartFields = [];
+  for (let i = 0; i < n; i++) {
+    const start = i * pagesPerPart + 1 + (i < remainder ? i : remainder);
+    const extra = i < remainder ? 1 : 0;
+    const end = start + pagesPerPart - 1 + extra;
+    adminPartFields.push({
+      label: 'Partie ' + (i+1),
+      description: 'Pages ' + start + ' à ' + end + ' (' + (end - start + 1) + ' pages)'
+    });
+  }
+  renderPartFields();
+  toast(n + ' parties générées automatiquement !', 'success');
+};
+
+window.clearPdf = function() {
+  pdfPageCount = 0;
+  pdfFileName = '';
+  document.getElementById('pdf-info').classList.remove('show');
+  document.getElementById('pdf-drop-zone').style.display = 'block';
+  document.getElementById('pdf-file-input').value = '';
+  document.getElementById('pdf-split-preview').innerHTML = '';
+};
+
+// Drag & drop support
+document.addEventListener('DOMContentLoaded', () => {
+  const zone = document.getElementById('pdf-drop-zone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) handlePdfUpload(file);
+  });
+});
 
 // ── ADMIN: ADD BOOK ──
 let adminPartFields = [];
