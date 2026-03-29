@@ -911,19 +911,6 @@ function toast(msg, type='') {
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 
-// ── Expose globals for inline handlers ──
-window.loginWith = loginWith;
-window.switchTab = switchTab;
-window.changeDay = changeDay;
-window.openProposeModal = openProposeModal;
-window.addPartField = addPartField;
-window.adminAddBook = adminAddBook;
-window.closeModal = closeModal;
-window.confirmReserve = confirmReserve;
-window.submitConfirm = submitConfirm;
-window.submitProposal = submitProposal;
-window.logout = logout;
-
 // ── INIT ──
 async function init() {
   // Auto-login if session saved
@@ -1197,7 +1184,6 @@ function toggleBook(id) {
   container.classList.toggle('open', !isOpen);
   chevron.classList.toggle('open', !isOpen);
 }
-window.toggleBook = toggleBook;
 
 // ── RESERVE ──
 function openReserveModal(bookId, bookTitle, partId, partLabel) {
@@ -1207,7 +1193,6 @@ function openReserveModal(bookId, bookTitle, partId, partLabel) {
   document.getElementById('reserve-note').value = '';
   openModal('modal-reserve');
 }
-window.openReserveModal = openReserveModal;
 
 async function confirmReserve() {
   if (!reserveContext) return;
@@ -1238,7 +1223,6 @@ function openConfirmModal(bookId, partId, partLabel, resId) {
   document.getElementById('confirm-comment').value = '';
   openModal('modal-confirm');
 }
-window.openConfirmModal = openConfirmModal;
 
 async function submitConfirm() {
   if (!confirmContext) return;
@@ -1264,7 +1248,6 @@ async function cancelReservation(resId) {
     loadBooks();
   } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
-window.cancelReservation = cancelReservation;
 
 // ── PROPOSE (member) ──
 function openProposeModal() {
@@ -1412,7 +1395,6 @@ function removePartField(i) {
   adminPartFields.splice(i,1);
   renderPartFields();
 }
-window.removePartField = removePartField;
 
 async function adminAddBook() {
   if (!isAdmin) return;
@@ -1486,7 +1468,6 @@ async function deleteBook(bookId) {
     loadAdminBooks();
   } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
-window.deleteBook = deleteBook;
 
 // ── ADMIN: PROPOSALS ──
 async function loadProposals() {
@@ -1537,8 +1518,6 @@ async function rejectProposal(id) {
   toast('Proposition refusée.', '');
   loadProposals();
 }
-window.approveProposal = approveProposal;
-window.rejectProposal = rejectProposal;
 
 // ── MEMBERS ──
 async function loadMembers() {
@@ -1558,6 +1537,27 @@ async function loadMembers() {
     grid.appendChild(card);
   });
 }
+
+// ── Expose globals for inline handlers ──
+window.loginWith = loginWith;
+window.switchTab = switchTab;
+window.changeDay = changeDay;
+window.openProposeModal = openProposeModal;
+window.addPartField = addPartField;
+window.adminAddBook = adminAddBook;
+window.closeModal = closeModal;
+window.confirmReserve = confirmReserve;
+window.submitConfirm = submitConfirm;
+window.submitProposal = submitProposal;
+window.logout = logout;
+window.toggleBook = toggleBook;
+window.openReserveModal = openReserveModal;
+window.openConfirmModal = openConfirmModal;
+window.cancelReservation = cancelReservation;
+window.deleteBook = deleteBook;
+window.approveProposal = approveProposal;
+window.rejectProposal = rejectProposal;
+window.removePartField = removePartField;
 
 // ── START ──
 init();
