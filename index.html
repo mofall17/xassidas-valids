@@ -854,6 +854,9 @@ window.logout = logout;
 
 // ── INIT ──
 async function init() {
+  // Auto-login if session saved
+  const saved = localStorage.getItem('bt_user');
+  if (saved) { await loginWith(saved); return; }
   // Load members for splash
   const snap = await getDocs(collection(db, COL_MEMBERS));
   const chips = document.getElementById('member-chips');
@@ -888,6 +891,7 @@ async function loginWith(name) {
   const data = snap.exists() ? snap.data() : { name, isAdmin: false };
   currentUser = { id, name: data.name || name };
   isAdmin = data.isAdmin || false;
+  localStorage.setItem('bt_user', currentUser.name);
 
   document.getElementById('user-name-badge').textContent = currentUser.name;
   document.getElementById('user-avatar').textContent = initials(currentUser.name);
@@ -909,6 +913,7 @@ function logout() {
   if (booksUnsubscribe) booksUnsubscribe();
   currentUser = null;
   isAdmin = false;
+  localStorage.removeItem('bt_user');
   document.getElementById('app').style.display = 'none';
   document.getElementById('splash').style.display = 'flex';
   document.getElementById('member-chips').innerHTML = '';
