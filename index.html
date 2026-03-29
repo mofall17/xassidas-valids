@@ -965,7 +965,7 @@ function loadBooks() {
   const grid = document.getElementById('books-grid');
   grid.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>Chargement...</p></div>';
 
-  const q = query(collection(db, COL_BOOKS), where('date','==',currentDateStr), orderBy('createdAt','asc'));
+  const q = query(collection(db, COL_BOOKS), where('date','==',currentDateStr));
   booksUnsubscribe = onSnapshot(q, async (snap) => {
     if (snap.empty) {
       grid.innerHTML = `<div class="empty-state"><div class="icon">📚</div><p>Aucun livre programmé pour ce jour.</p>${isAdmin?'<button class="btn btn-gold btn-sm" onclick="switchTab(\'admin\');setTimeout(()=>{document.getElementById(\'admin-tab\').dispatchEvent(new Event(\'click\'))},0)">+ Ajouter via Admin</button>':''}</div>`;
@@ -988,6 +988,9 @@ function loadBooks() {
       });
       grid.appendChild(renderBookCard(book, partsArr, reservations));
     }
+  }, (err) => {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Erreur Firestore : ' + err.message + '</p></div>';
+    console.error(err);
   });
 }
 
