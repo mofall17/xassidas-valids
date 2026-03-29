@@ -3,246 +3,792 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Suivi des Tâches Quotidiennes</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>BookTrack</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
   :root {
-    --bg: #0e0e10;
-    --surface: #18181c;
-    --surface2: #222228;
-    --border: #2e2e38;
-    --accent: #f0c46a;
-    --accent2: #e07b54;
-    --text: #f0ede8;
-    --text-muted: #888898;
-    --green: #6bcf9e;
-    --red: #e07b7b;
+    --bg: #0f0e0c;
+    --bg2: #191814;
+    --bg3: #211f1a;
+    --surface: #2a271f;
+    --surface2: #332f24;
+    --border: rgba(255,240,200,0.08);
+    --border2: rgba(255,240,200,0.15);
+    --gold: #d4a84b;
+    --gold2: #e8c06a;
+    --gold3: #f5d98a;
+    --amber: #c07a20;
+    --text: #f0e8d8;
+    --text2: #a89880;
+    --text3: #6a5f4a;
+    --green: #4a9960;
+    --green-bg: rgba(74,153,96,0.12);
+    --red: #c04040;
+    --red-bg: rgba(192,64,64,0.12);
+    --blue: #4a80b0;
+    --blue-bg: rgba(74,128,176,0.12);
     --radius: 10px;
+    --radius-lg: 16px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 0 0 60px; }
 
-  #loader {
-    position: fixed; inset: 0; background: var(--bg);
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── SPLASH ── */
+  #splash {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 40px;
+    background: radial-gradient(ellipse at 50% 40%, #2a220a 0%, #0f0e0c 70%);
+  }
+  .splash-logo { text-align: center; }
+  .splash-logo h1 {
+    font-family: 'Lora', serif;
+    font-size: 48px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--gold), var(--gold3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .splash-logo p { color: var(--text2); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; }
+  .splash-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .splash-card h2 { font-size: 16px; font-weight: 500; color: var(--text2); text-align: center; }
+  .member-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .member-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .2s;
+    color: var(--text2);
+  }
+  .member-chip:hover { background: var(--surface2); border-color: var(--gold); color: var(--gold); }
+  .divider { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 12px; }
+  .divider::before, .divider::after { content:''; flex:1; height:1px; background: var(--border); }
+  input[type=text] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+    transition: border-color .2s;
+  }
+  input[type=text]:focus { border-color: var(--gold); }
+  input[type=text]::placeholder { color: var(--text3); }
+  .btn {
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all .2s;
+  }
+  .btn-gold { background: var(--gold); color: #0f0e0c; }
+  .btn-gold:hover { background: var(--gold2); }
+  .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text2); }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
+  .btn-green { background: var(--green-bg); border: 1px solid var(--green); color: var(--green); }
+  .btn-green:hover { background: var(--green); color: white; }
+  .btn-red { background: var(--red-bg); border: 1px solid var(--red); color: var(--red); }
+  .btn-red:hover { background: var(--red); color: white; }
+  .btn-blue { background: var(--blue-bg); border: 1px solid var(--blue); color: var(--blue); }
+  .btn-blue:hover { background: var(--blue); color: white; }
+  .btn-danger { background: var(--red); color: white; }
+  .btn-danger:hover { background: #a03030; }
+
+  /* ── MAIN APP ── */
+  #app { display: none; flex-direction: column; min-height: 100vh; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-logo {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: -0.5px;
+    flex: 1;
+  }
+  .topbar-date { color: var(--text2); font-size: 13px; }
+  .user-badge {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 4px 12px 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .user-avatar {
+    width: 24px; height: 24px;
+    background: var(--gold);
+    border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    z-index: 9999; flex-direction: column; gap: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #0f0e0c;
   }
-  #loader .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
-  #loader p { color: var(--text-muted); font-size: 0.85rem; font-family: 'DM Mono', monospace; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  header {
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 20px 32px; display: flex; align-items: center; justify-content: space-between;
-    gap: 16px; flex-wrap: wrap; position: sticky; top: 0; z-index: 100;
+  .admin-badge {
+    background: var(--gold);
+    color: #0f0e0c;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
-  .logo { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--accent); letter-spacing: -0.5px; }
-  .logo span { color: var(--text-muted); font-size: 0.9rem; font-family: 'DM Mono', monospace; }
-  .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .date-nav { display: flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 10px; }
-  .date-nav button { background: none; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; padding: 2px 6px; border-radius: 6px; transition: background .15s, color .15s; }
-  .date-nav button:hover { background: var(--border); color: var(--text); }
-  #currentDate { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--accent); min-width: 110px; text-align: center; cursor: pointer; border: none; background: transparent; }
-  #currentDate::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 4px;
+  }
+  .nav-tab {
+    padding: 5px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text2);
+    transition: all .2s;
+    border: none;
+    background: none;
+    font-family: 'Sora', sans-serif;
+  }
+  .nav-tab.active { background: var(--surface2); color: var(--text); }
+  .nav-tab:hover:not(.active) { color: var(--text); }
+  .logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text3);
+    font-size: 18px;
+    padding: 4px;
+    transition: color .2s;
+  }
+  .logout-btn:hover { color: var(--red); }
 
-  .sync-status { font-family: 'DM Mono', monospace; font-size: 0.72rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface2); display: flex; align-items: center; gap: 6px; color: var(--text-muted); }
-  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); transition: background .3s; }
-  .sync-dot.synced { background: var(--green); }
-  .sync-dot.syncing { background: var(--accent); animation: pulse .8s infinite; }
-  .sync-dot.error { background: var(--red); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  /* ── CONTENT ── */
+  .content { flex: 1; padding: 24px; max-width: 1000px; margin: 0 auto; width: 100%; }
 
-  .person-bar { padding: 16px 32px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--border); background: var(--surface); }
-  .person-bar label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-right: 4px; }
-  .person-chip { padding: 6px 16px; border-radius: 999px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text-muted); font-size: 0.82rem; font-weight: 500; font-family: 'DM Sans', sans-serif; display: flex; align-items: center; gap: 6px; }
-  .person-chip .delete-person { margin-left: 4px; cursor: pointer; color: var(--text-muted); font-size: 0.75rem; opacity: 0; transition: opacity .15s; }
-  .person-chip:hover .delete-person { opacity: 1; color: var(--red); }
-  .add-person-btn { padding: 6px 14px; border-radius: 999px; border: 1.5px dashed var(--border); background: none; color: var(--text-muted); font-size: 0.82rem; cursor: pointer; transition: all .2s; font-family: 'DM Sans', sans-serif; }
-  .add-person-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+  /* ── TAB PANELS ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
-  .tools-bar { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 32px; background: var(--surface); border-bottom: 1px solid var(--border); }
-  .btn-tool { padding: 6px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: none; color: var(--text-muted); font-size: 0.78rem; cursor: pointer; font-family: 'DM Mono', monospace; transition: all .2s; }
-  .btn-tool:hover { border-color: var(--accent2); color: var(--accent2); }
+  /* ── DATE NAV ── */
+  .date-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .date-nav button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: var(--text2);
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    transition: all .2s;
+  }
+  .date-nav button:hover { border-color: var(--gold); color: var(--gold); }
+  .date-display {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+    text-align: center;
+  }
+  .date-display.today { color: var(--gold); }
 
-  main { max-width: 920px; margin: 0 auto; padding: 28px 24px; }
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-  .section-title { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
-  .badge { font-family: 'DM Mono', monospace; font-size: 0.7rem; background: var(--surface2); border: 1px solid var(--border); padding: 2px 8px; border-radius: 999px; color: var(--text-muted); }
+  /* ── BOOK CARD ── */
+  .books-grid { display: flex; flex-direction: column; gap: 16px; }
+  .book-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .book-card:hover { border-color: var(--border2); }
+  .book-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    cursor: pointer;
+  }
+  .book-cover {
+    width: 48px; height: 64px;
+    background: var(--surface2);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .book-info { flex: 1; }
+  .book-title {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .book-author { color: var(--text2); font-size: 13px; margin-bottom: 8px; }
+  .book-progress-bar {
+    height: 4px;
+    background: var(--surface);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .book-progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width .5s; }
+  .book-stats { display: flex; gap: 16px; font-size: 12px; color: var(--text3); }
+  .book-chevron { color: var(--text3); font-size: 18px; transition: transform .3s; margin-left: auto; }
+  .book-chevron.open { transform: rotate(180deg); }
 
-  .add-task-form { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-  .task-input { flex: 1; min-width: 200px; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 10px 16px; color: var(--text); font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color .2s; }
-  .task-input:focus { border-color: var(--accent); }
-  .task-input::placeholder { color: var(--text-muted); }
-  .btn-add { padding: 10px 20px; border-radius: var(--radius); border: none; background: var(--accent); color: #1a1200; font-weight: 600; font-size: 0.88rem; cursor: pointer; transition: opacity .2s, transform .1s; font-family: 'DM Sans', sans-serif; }
-  .btn-add:hover { opacity: .88; }
-  .btn-add:active { transform: scale(0.97); }
+  /* ── PARTS LIST ── */
+  .parts-container { display: none; border-top: 1px solid var(--border); }
+  .parts-container.open { display: block; }
+  .parts-list { display: flex; flex-direction: column; gap: 0; }
 
-  .task-list { display: flex; flex-direction: column; gap: 8px; }
+  .part-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    transition: background .2s;
+  }
+  .part-row:hover { background: var(--surface); }
+  .part-label {
+    width: 120px;
+    font-size: 13px;
+    color: var(--text2);
+    flex-shrink: 0;
+  }
+  .part-desc { flex: 1; font-size: 13px; color: var(--text); }
+  .part-assignee {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 180px;
+  }
+  .assignee-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .assignee-chip {
+    background: var(--surface2);
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .assignee-chip.me { background: rgba(212,168,75,0.15); color: var(--gold2); border: 1px solid rgba(212,168,75,0.3); }
+  .assignee-chip.confirmed { background: var(--green-bg); color: var(--green); }
+  .check-icon { font-size: 10px; }
+  .part-status { flex-shrink: 0; display: flex; gap: 6px; align-items: center; }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-dot.free { background: var(--text3); }
+  .status-dot.taken { background: var(--amber); }
+  .status-dot.confirmed { background: var(--green); }
+  .status-dot.full { background: var(--red); }
 
-  .task-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; gap: 12px; transition: border-color .2s, background .2s; animation: fadeIn .25s ease; flex-wrap: wrap; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  .task-card:hover { border-color: #444458; }
-  .task-card.all-done { background: rgba(107,207,158,0.06); border-color: rgba(107,207,158,0.25); }
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text3);
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; margin-bottom: 16px; }
 
-  .task-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-  .task-name { font-size: 0.92rem; color: var(--text); min-width: 0; word-break: break-word; }
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .modal h3 {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+  .modal-row { display: flex; gap: 10px; align-items: flex-end; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .form-label { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
 
-  .validators { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+  /* ── PARTS BUILDER ── */
+  .parts-builder { display: flex; flex-direction: column; gap: 8px; }
+  .part-builder-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .part-builder-row span { color: var(--text3); font-size: 12px; min-width: 60px; }
+  .part-builder-row input { flex: 1; }
+  .remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text3);
+    font-size: 16px;
+    padding: 2px 6px;
+    transition: color .2s;
+  }
+  .remove-btn:hover { color: var(--red); }
 
-  .validator-dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all .2s; position: relative; text-transform: uppercase; user-select: none; }
-  .validator-dot:hover { border-color: var(--accent); color: var(--text); transform: scale(1.1); }
-  .validator-dot.checked { background: var(--green); border-color: var(--green); color: #0a2a1c; }
-  .validator-dot .tooltip { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #333; color: var(--text); font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .15s; z-index: 10; }
-  .validator-dot:hover .tooltip { opacity: 1; }
+  /* ── ADMIN PANEL ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .proposals-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+  .proposal-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .proposal-info { flex: 1; }
+  .proposal-title { font-size: 14px; color: var(--text); margin-bottom: 2px; }
+  .proposal-meta { font-size: 12px; color: var(--text3); }
+  .proposal-actions { display: flex; gap: 8px; }
 
-  .no-assignee { font-size: 0.75rem; color: var(--text-muted); font-family: 'DM Mono', monospace; font-style: italic; }
+  /* ── MEMBRES TAB ── */
+  .members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .member-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+  }
+  .member-card-avatar {
+    width: 48px; height: 48px;
+    background: var(--surface2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--gold);
+    margin: 0 auto 10px;
+    border: 2px solid var(--border2);
+  }
+  .member-card-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .member-card-stats { font-size: 12px; color: var(--text3); }
+  .member-card.admin-card { border-color: rgba(212,168,75,0.3); background: rgba(212,168,75,0.04); }
 
-  .task-actions { display: flex; gap: 4px; flex-shrink: 0; }
-  .btn-icon { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.85rem; padding: 5px 7px; border-radius: 6px; transition: background .15s, color .15s; line-height: 1; }
-  .btn-icon:hover { background: var(--surface2); color: var(--text); }
-  .btn-icon.danger:hover { color: var(--red); }
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--text);
+    z-index: 300;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all .3s;
+    pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.success { border-color: var(--green); color: var(--green); }
+  #toast.error { border-color: var(--red); color: var(--red); }
 
-  .progress-section { margin-bottom: 28px; }
-  .progress-bar-wrap { background: var(--surface2); border-radius: 999px; height: 6px; overflow: hidden; margin-top: 8px; }
-  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 999px; transition: width .4s cubic-bezier(0.4,0,0.2,1); }
+  /* ── COUNTDOWN ── */
+  .deadline-bar {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+  .deadline-bar .label { color: var(--text2); }
+  .deadline-bar .time { color: var(--gold); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .deadline-bar.urgent .time { color: var(--red); }
 
-  .summary-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
-  .summary-table th { text-align: left; color: var(--text-muted); font-weight: 500; padding: 6px 10px; border-bottom: 1px solid var(--border); font-family: 'DM Mono', monospace; font-size: 0.75rem; text-transform: uppercase; }
-  .summary-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
-  .summary-table tr:last-child td { border-bottom: none; }
-  .summary-table tr:hover td { background: var(--surface2); }
-  .pct-bar { height: 4px; background: var(--surface2); border-radius: 999px; overflow: hidden; width: 80px; display: inline-block; vertical-align: middle; margin-left: 8px; }
-  .pct-bar-fill { height: 100%; background: var(--green); border-radius: 999px; }
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--text3);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
 
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.9rem; }
-  .empty-state .emoji { font-size: 2rem; margin-bottom: 10px; }
+  /* ── PROPOSE FORM (member) ── */
+  .propose-banner {
+    background: linear-gradient(135deg, rgba(212,168,75,0.08), rgba(212,168,75,0.03));
+    border: 1px dashed rgba(212,168,75,0.3);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .propose-banner p { flex: 1; font-size: 13px; color: var(--text2); }
 
-  /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 999; backdrop-filter: blur(3px); animation: fadeIn .15s; }
-  .modal { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 28px; width: 380px; max-width: 95vw; }
-  .modal h3 { font-family: 'DM Serif Display', serif; font-size: 1.15rem; margin-bottom: 6px; }
-  .modal .subtitle { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 18px; }
-  .modal input[type="text"] { width: 100%; background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 9px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; margin-bottom: 14px; transition: border-color .2s; }
-  .modal input[type="text"]:focus { border-color: var(--accent); }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
-  .btn-cancel { padding: 8px 18px; border-radius: var(--radius); border: 1.5px solid var(--border); background: none; color: var(--text-muted); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; }
-  .btn-cancel:hover { color: var(--text); }
-  .btn-confirm { padding: 8px 18px; border-radius: var(--radius); border: none; background: var(--accent); color: #1a1200; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; }
+  select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+    transition: border-color .2s;
+    appearance: none;
+  }
+  select:focus { border-color: var(--gold); }
+  option { background: var(--bg2); }
 
-  /* ASSIGNEE CHECKBOXES */
-  .assignee-list { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; }
-  .assignee-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface2); cursor: pointer; transition: border-color .15s; user-select: none; }
-  .assignee-item:hover { border-color: var(--accent); }
-  .assignee-item.selected { border-color: var(--green); background: rgba(107,207,158,0.08); }
-  .assignee-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; flex-shrink: 0; }
-  .assignee-item.selected .assignee-avatar { background: var(--green); color: #0a2a1c; }
-  .assignee-name { font-size: 0.88rem; flex: 1; }
-  .assignee-check { font-size: 1rem; color: var(--green); opacity: 0; transition: opacity .15s; }
-  .assignee-item.selected .assignee-check { opacity: 1; }
+  textarea {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color .2s;
+  }
+  textarea:focus { border-color: var(--gold); }
 
-  .section-divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  .tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+  .tag-new { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue); }
+  .tag-proposal { background: rgba(192,122,32,0.15); color: var(--amber); border: 1px solid var(--amber); }
+
+  .scroll-top { scrollbar-width: thin; scrollbar-color: var(--surface2) transparent; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
 
   @media (max-width: 600px) {
-    header, .person-bar, .tools-bar { padding: 14px 16px; }
-    main { padding: 20px 14px; }
+    .topbar { padding: 0 12px; gap: 8px; }
+    .topbar-logo { font-size: 16px; }
+    .topbar-date { display: none; }
+    .content { padding: 12px; }
+    .part-row { flex-wrap: wrap; gap: 8px; }
+    .nav-tab { padding: 5px 8px; font-size: 12px; }
   }
 </style>
 </head>
 <body>
 
-<div id="loader">
-  <div class="spinner"></div>
-  <p>Connexion à Firebase…</p>
+<!-- ══ SPLASH SCREEN ══ -->
+<div id="splash">
+  <div class="splash-logo">
+    <h1>📖 BookTrack</h1>
+    <p>Gestion de lecture collective</p>
+  </div>
+  <div class="splash-card">
+    <h2>Qui es-tu ?</h2>
+    <div class="member-list" id="member-chips"></div>
+    <div class="divider">ou</div>
+    <input type="text" id="pseudo-input" placeholder="Nouveau pseudo..." maxlength="30">
+    <button class="btn btn-gold" onclick="loginWith(document.getElementById('pseudo-input').value)">Rejoindre →</button>
+  </div>
 </div>
 
-<header>
-  <div class="logo">CheckDay <span>— suivi quotidien</span></div>
-  <div class="header-right">
-    <div class="sync-status">
-      <div class="sync-dot syncing" id="syncDot"></div>
-      <span id="syncText">Connexion…</span>
+<!-- ══ MAIN APP ══ -->
+<div id="app">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-logo">📖 BookTrack</div>
+    <div class="topbar-date" id="topbar-date"></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('today')">Aujourd'hui</button>
+      <button class="nav-tab" onclick="switchTab('members')">Membres</button>
+      <button class="nav-tab" id="admin-tab" style="display:none" onclick="switchTab('admin')">Admin</button>
     </div>
-    <div class="date-nav">
-      <button onclick="changeDay(-1)">‹</button>
-      <input type="date" id="currentDate" onchange="loadDay()">
-      <button onclick="changeDay(1)">›</button>
+    <div class="user-badge">
+      <div class="user-avatar" id="user-avatar"></div>
+      <span id="user-name-badge"></span>
+      <span class="admin-badge" id="admin-badge-top" style="display:none">Admin</span>
     </div>
-    <button class="btn-add" onclick="goToday()" style="padding:8px 14px;font-size:0.8rem;">Aujourd'hui</button>
+    <button class="logout-btn" title="Se déconnecter" onclick="logout()">⏏</button>
   </div>
-</header>
 
-<div class="person-bar">
-  <label>Intervenants :</label>
-  <div id="personChips" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
-  <button class="add-person-btn" onclick="showAddPerson()">＋ Ajouter</button>
+  <!-- CONTENT -->
+  <div class="content scroll-top">
+
+    <!-- ══ TODAY TAB ══ -->
+    <div class="tab-panel active" id="panel-today">
+      <div class="deadline-bar" id="deadline-bar">
+        <span class="label">🕐 Délai de confirmation</span>
+        <span class="time" id="countdown-display">–</span>
+      </div>
+      <div class="date-nav">
+        <button onclick="changeDay(-1)">← Avant</button>
+        <div class="date-display" id="date-display"></div>
+        <button onclick="changeDay(1)">Après →</button>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="status-dot free"></div> Libre</div>
+        <div class="legend-item"><div class="status-dot taken"></div> Réservé</div>
+        <div class="legend-item"><div class="status-dot confirmed"></div> Confirmé</div>
+        <div class="legend-item"><div class="status-dot full"></div> Complet</div>
+      </div>
+      <div class="propose-banner" id="propose-banner">
+        <span style="font-size:20px">💡</span>
+        <p>Tu veux proposer un livre pour cette journée ?</p>
+        <button class="btn btn-gold btn-sm" onclick="openProposeModal()">Proposer</button>
+      </div>
+      <div class="books-grid" id="books-grid">
+        <div class="empty-state">
+          <div class="icon">📚</div>
+          <p>Chargement des livres...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MEMBERS TAB ══ -->
+    <div class="tab-panel" id="panel-members">
+      <div class="section-header">
+        <div class="section-title">👥 Membres du groupe</div>
+        <span id="members-count" style="color:var(--text3);font-size:13px"></span>
+      </div>
+      <div class="members-grid" id="members-grid"></div>
+    </div>
+
+    <!-- ══ ADMIN TAB ══ -->
+    <div class="tab-panel" id="panel-admin">
+      <div class="section-header">
+        <div class="section-title">⚡ Propositions en attente</div>
+      </div>
+      <div class="proposals-list" id="proposals-list">
+        <p style="color:var(--text3);font-size:13px">Aucune proposition en attente.</p>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">📘 Ajouter un livre</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:12px;">
+        <div class="modal-row">
+          <div class="form-group">
+            <label class="form-label">Titre *</label>
+            <input type="text" id="admin-book-title" placeholder="Ex: L'Alchimiste">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Auteur</label>
+            <input type="text" id="admin-book-author" placeholder="Paulo Coelho">
+          </div>
+        </div>
+        <div class="modal-row">
+          <div class="form-group">
+            <label class="form-label">Date *</label>
+            <input type="text" id="admin-book-date" placeholder="2025-01-15">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Icône</label>
+            <input type="text" id="admin-book-icon" placeholder="📖" maxlength="4" style="width:80px">
+          </div>
+        </div>
+        <div>
+          <label class="form-label" style="margin-bottom:8px;display:block">Parties</label>
+          <div class="parts-builder" id="admin-parts-builder"></div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addPartField()">+ Ajouter une partie</button>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px">
+          <button class="btn btn-gold" onclick="adminAddBook()">Ajouter le livre</button>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top:24px">
+        <div class="section-title">📅 Livres existants</div>
+      </div>
+      <div id="admin-books-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+
+  </div>
 </div>
 
-<div class="tools-bar">
-  <button class="btn-tool" onclick="copyTasksFromPrevDay()">⬆ Copier tâches d'hier</button>
-  <button class="btn-tool" onclick="exportCSV()">⤓ Exporter CSV</button>
-  <button class="btn-tool" onclick="clearDayTasks()">✕ Vider le jour</button>
-</div>
+<!-- ══ MODALS ══ -->
 
-<main>
-  <div class="progress-section">
-    <div class="section-header">
-      <div class="section-title">Progression du jour <span id="progressBadge" class="badge">0 / 0</span></div>
-      <span id="progressPct" style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--text-muted)">0%</span>
-    </div>
-    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
-  </div>
-
-  <div class="section-header"><div class="section-title">Tâches du jour</div></div>
-  <div class="add-task-form">
-    <input class="task-input" id="newTaskInput" placeholder="Nouvelle tâche…" onkeydown="if(event.key==='Enter')addTask()">
-    <button class="btn-add" onclick="addTask()">＋ Ajouter</button>
-  </div>
-  <div class="task-list" id="taskList"></div>
-
-  <hr class="section-divider">
-
-  <div class="section-header"><div class="section-title">Récapitulatif par intervenant</div></div>
-  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;">
-    <table class="summary-table">
-      <thead><tr><th>Intervenant</th><th>Assignées</th><th>Validées</th><th>Restantes</th><th>Progression</th></tr></thead>
-      <tbody id="summaryBody"></tbody>
-    </table>
-  </div>
-</main>
-
-<!-- Modal : ajouter une personne -->
-<div class="modal-overlay" id="personModal" style="display:none">
+<!-- Reserve Modal -->
+<div class="modal-overlay" id="modal-reserve">
   <div class="modal">
-    <h3>Ajouter un intervenant</h3>
-    <input type="text" id="personNameInput" placeholder="Nom de la personne…" maxlength="24"
-           onkeydown="if(event.key==='Enter')confirmAddPerson()">
+    <h3>📌 Réserver une partie</h3>
+    <p style="color:var(--text2);font-size:13px" id="reserve-info"></p>
+    <div class="form-group">
+      <label class="form-label">Partie</label>
+      <select id="reserve-part-select"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Note (optionnel)</label>
+      <input type="text" id="reserve-note" placeholder="Ex: Chapitres 1-5">
+    </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="hideModal('personModal')">Annuler</button>
-      <button class="btn-confirm" onclick="confirmAddPerson()">Ajouter</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-reserve')">Annuler</button>
+      <button class="btn btn-gold" onclick="confirmReserve()">Réserver</button>
     </div>
   </div>
 </div>
 
-<!-- Modal : assigner des intervenants à une tâche -->
-<div class="modal-overlay" id="assignModal" style="display:none">
+<!-- Confirm Reading Modal -->
+<div class="modal-overlay" id="modal-confirm">
   <div class="modal">
-    <h3>Assigner des intervenants</h3>
-    <p class="subtitle" id="assignModalSubtitle"></p>
-    <div class="assignee-list" id="assigneeList"></div>
+    <h3>✅ Confirmer la lecture</h3>
+    <p style="color:var(--text2);font-size:13px" id="confirm-info"></p>
+    <div class="form-group">
+      <label class="form-label">Commentaire (optionnel)</label>
+      <textarea id="confirm-comment" placeholder="Ton ressenti sur cette partie..."></textarea>
+    </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="hideModal('assignModal')">Annuler</button>
-      <button class="btn-confirm" onclick="confirmAssign()">Enregistrer</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-confirm')">Annuler</button>
+      <button class="btn btn-green" onclick="submitConfirm()">✓ Confirmer la lecture</button>
     </div>
   </div>
 </div>
 
+<!-- Propose Modal (member) -->
+<div class="modal-overlay" id="modal-propose">
+  <div class="modal">
+    <h3>💡 Proposer un livre</h3>
+    <p style="color:var(--text2);font-size:13px">Ta proposition sera soumise à l'admin pour validation.</p>
+    <div class="form-group">
+      <label class="form-label">Titre *</label>
+      <input type="text" id="propose-title" placeholder="Titre du livre">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Auteur</label>
+      <input type="text" id="propose-author" placeholder="Auteur">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Pourquoi ce livre ?</label>
+      <textarea id="propose-reason" placeholder="Raison de ta proposition..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-propose')">Annuler</button>
+      <button class="btn btn-gold" onclick="submitProposal()">Envoyer la proposition</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ══ FIREBASE + APP LOGIC ══ -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import {
-  getFirestore, doc, collection, onSnapshot,
-  setDoc, updateDoc, deleteDoc, getDocs, writeBatch
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  getFirestore, collection, doc, getDoc, getDocs, setDoc,
+  updateDoc, addDoc, onSnapshot, serverTimestamp, query, where, orderBy
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
+// ── Firebase Config ── (même projet que CheckDay: xassidasvalids)
 const firebaseConfig = {
   apiKey: "AIzaSyCPMnfRCOV-Gn5WyCnr70fqy7LYkI6xDro",
   authDomain: "xassidasvalids.firebaseapp.com",
@@ -252,322 +798,568 @@ const firebaseConfig = {
   appId: "1:921554278130:web:38951124868766f48a626b"
 };
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig, 'booktrack');
 const db = getFirestore(app);
 
-let selectedDate = todayStr();
-let persons = [];   // [{id, name}]
-let tasks = [];     // [{id, name, order, assignees:[personId,...]}]
-let checks = {};    // {taskId: {personId: bool}}
-let unsubDay = null;
+// ── Collections ──
+const COL_MEMBERS = 'bt_members';
+const COL_BOOKS   = 'bt_books';
+const COL_PARTS   = 'bt_parts';       // subcollection under book
+const COL_RESERVATIONS = 'bt_reservations';
+const COL_PROPOSALS = 'bt_proposals';
 
-// Assign modal state
-let assignTaskId = null;
-let assignSelected = new Set();
+// ── State ──
+let currentUser = null;
+let isAdmin = false;
+let currentDateStr = todayStr();
+let booksUnsubscribe = null;
+let partBuilderCount = 0;
+let reserveContext = null;
+let confirmContext = null;
 
-function todayStr() { return new Date().toISOString().slice(0,10); }
-
-function setSyncStatus(s) {
-  document.getElementById('syncDot').className = 'sync-dot ' + s;
-  document.getElementById('syncText').textContent = s==='synced'?'Synchronisé':s==='syncing'?'Sync…':'Erreur';
+// ── Utilities ──
+function todayStr() {
+  return new Date().toISOString().slice(0,10);
 }
-
-function initials(name) { return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
-function checksDoc(date, taskId) { return doc(db,'days',date,'checks',taskId); }
-function tasksCol(date) { return collection(db,'days',date,'tasks'); }
-
-// ── Listeners ─────────────────────────────────────────────────────────────────
-onSnapshot(collection(db,'persons'), snap => {
-  persons = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.name.localeCompare(b.name));
-  renderPersonChips();
-  renderTaskList();
-  renderSummary();
-  renderProgress();
-}, ()=>setSyncStatus('error'));
-
-function listenDay(date) {
-  if (unsubDay) unsubDay();
-  tasks=[]; checks={};
-  const u1 = onSnapshot(tasksCol(date), snap => {
-    tasks = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
-    renderTaskList(); renderSummary(); renderProgress();
-    setSyncStatus('synced');
-    document.getElementById('loader').style.display='none';
-  }, ()=>setSyncStatus('error'));
-  const u2 = onSnapshot(collection(db,'days',date,'checks'), snap => {
-    snap.docs.forEach(d=>{checks[d.id]=d.data();});
-    renderTaskList(); renderSummary(); renderProgress();
-  }, ()=>{});
-  unsubDay = ()=>{u1();u2();};
+function formatDateFR(str) {
+  const d = new Date(str + 'T12:00:00');
+  const opts = { weekday:'long', day:'numeric', month:'long', year:'numeric' };
+  const s = d.toLocaleDateString('fr-FR', opts);
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
-
-// ── Date ──────────────────────────────────────────────────────────────────────
-window.changeDay = d => {
-  const dt=new Date(selectedDate); dt.setDate(dt.getDate()+d);
-  selectedDate=dt.toISOString().slice(0,10);
-  document.getElementById('currentDate').value=selectedDate;
-  setSyncStatus('syncing'); listenDay(selectedDate);
-};
-window.loadDay = () => { selectedDate=document.getElementById('currentDate').value; setSyncStatus('syncing'); listenDay(selectedDate); };
-window.goToday = () => { selectedDate=todayStr(); document.getElementById('currentDate').value=selectedDate; setSyncStatus('syncing'); listenDay(selectedDate); };
-
-// ── Persons ───────────────────────────────────────────────────────────────────
-function renderPersonChips() {
-  const el=document.getElementById('personChips'); el.innerHTML='';
-  persons.forEach(p=>{
-    const chip=document.createElement('div'); chip.className='person-chip';
-    chip.innerHTML=`<span>${initials(p.name)}</span>${p.name}<span class="delete-person" title="Supprimer" onclick="deletePerson('${p.id}')">✕</span>`;
-    el.appendChild(chip);
-  });
+function initials(name) {
+  return name.split(' ').map(p=>p[0]).join('').toUpperCase().slice(0,2);
 }
-window.showAddPerson = () => { document.getElementById('personNameInput').value=''; document.getElementById('personModal').style.display='flex'; setTimeout(()=>document.getElementById('personNameInput').focus(),50); };
-window.confirmAddPerson = async () => {
-  const name=document.getElementById('personNameInput').value.trim();
-  if (!name) return;
-  if (persons.find(p=>p.name===name)){alert('Cette personne existe déjà.');return;}
-  setSyncStatus('syncing');
-  await setDoc(doc(db,'persons','p_'+Date.now()),{name});
-  hideModal('personModal');
-};
-window.deletePerson = async id => {
-  if (!confirm('Supprimer cet intervenant ?')) return;
-  setSyncStatus('syncing');
-  await deleteDoc(doc(db,'persons',id));
-};
-window.hideModal = id => { document.getElementById(id).style.display='none'; };
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  setTimeout(()=>{ t.className=''; }, 3000);
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
 
-// ── Tasks ─────────────────────────────────────────────────────────────────────
-window.addTask = async () => {
-  const input=document.getElementById('newTaskInput');
-  const name=input.value.trim(); if (!name) return;
-  setSyncStatus('syncing');
-  const id='t_'+Date.now();
-  // assignees vide par défaut — à définir via le bouton Modifier
-  await setDoc(doc(db,'days',selectedDate,'tasks',id),{name,order:Date.now(),assignees:[]});
-  await setDoc(checksDoc(selectedDate,id),{});
-  input.value='';
-};
+// ── Expose globals for inline handlers ──
+window.loginWith = loginWith;
+window.switchTab = switchTab;
+window.changeDay = changeDay;
+window.openProposeModal = openProposeModal;
+window.addPartField = addPartField;
+window.adminAddBook = adminAddBook;
+window.closeModal = closeModal;
+window.confirmReserve = confirmReserve;
+window.submitConfirm = submitConfirm;
+window.submitProposal = submitProposal;
+window.logout = logout;
 
-window.deleteTask = async id => {
-  setSyncStatus('syncing');
-  await deleteDoc(doc(db,'days',selectedDate,'tasks',id));
-  await deleteDoc(checksDoc(selectedDate,id));
-};
-
-window.toggleCheck = async (taskId, personId) => {
-  setSyncStatus('syncing');
-  const current=checks[taskId]&&checks[taskId][personId];
-  await setDoc(checksDoc(selectedDate,taskId),{[personId]:!current},{merge:true});
-};
-
-// ── Assign modal ───────────────────────────────────────────────────────────────
-window.openAssignModal = (taskId) => {
-  assignTaskId = taskId;
-  const task = tasks.find(t=>t.id===taskId);
-  assignSelected = new Set(task.assignees||[]);
-
-  document.getElementById('assignModalSubtitle').textContent = '« '+task.name+' »';
-
-  const list=document.getElementById('assigneeList'); list.innerHTML='';
-  if (!persons.length) {
-    list.innerHTML='<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:16px;">Aucun intervenant configuré.</p>';
+// ── INIT ──
+async function init() {
+  // Load members for splash
+  const snap = await getDocs(collection(db, COL_MEMBERS));
+  const chips = document.getElementById('member-chips');
+  const enter = document.getElementById('pseudo-input');
+  enter.addEventListener('keydown', e => { if(e.key==='Enter') loginWith(enter.value); });
+  if (snap.empty) {
+    chips.innerHTML = '<p style="color:var(--text3);font-size:12px;width:100%">Aucun membre enregistré. Saisis ton pseudo ci-dessous.</p>';
   } else {
-    persons.forEach(p=>{
-      const item=document.createElement('div');
-      item.className='assignee-item'+(assignSelected.has(p.id)?' selected':'');
-      item.dataset.id=p.id;
-      item.innerHTML=`<div class="assignee-avatar">${initials(p.name)}</div><span class="assignee-name">${p.name}</span><span class="assignee-check">✓</span>`;
-      item.onclick=()=>{
-        if(assignSelected.has(p.id)){assignSelected.delete(p.id);item.classList.remove('selected');}
-        else{assignSelected.add(p.id);item.classList.add('selected');}
-      };
-      list.appendChild(item);
+    snap.forEach(d => {
+      const btn = document.createElement('div');
+      btn.className = 'member-chip';
+      btn.textContent = d.data().name;
+      btn.onclick = () => loginWith(d.data().name);
+      chips.appendChild(btn);
     });
   }
-  document.getElementById('assignModal').style.display='flex';
-};
-
-window.confirmAssign = async () => {
-  if (!assignTaskId) return;
-  setSyncStatus('syncing');
-  const assignees=[...assignSelected];
-  await updateDoc(doc(db,'days',selectedDate,'tasks',assignTaskId),{assignees});
-  // Réinitialiser les checks pour ne garder que les assignés
-  const checkData={};
-  assignees.forEach(pid=>{ checkData[pid]=checks[assignTaskId]&&checks[assignTaskId][pid]||false; });
-  await setDoc(checksDoc(selectedDate,assignTaskId),checkData);
-  hideModal('assignModal');
-};
-
-// Tâche complète = tous les assignés ont coché
-function isTaskFullyDone(taskId) {
-  const task=tasks.find(t=>t.id===taskId);
-  if (!task||!task.assignees||!task.assignees.length) return false;
-  return task.assignees.every(pid=>checks[taskId]&&checks[taskId][pid]);
 }
 
-window.copyTasksFromPrevDay = async () => {
-  const d=new Date(selectedDate); d.setDate(d.getDate()-1);
-  const srcDate=d.toISOString().slice(0,10);
-  const srcSnap=await getDocs(tasksCol(srcDate));
-  if(srcSnap.empty){alert('Aucune tâche trouvée pour le jour précédent.');return;}
-  setSyncStatus('syncing');
-  const existingNames=tasks.map(t=>t.name);
-  const batch=writeBatch(db);
-  srcSnap.docs.forEach(d=>{
-    if(!existingNames.includes(d.data().name)){
-      const id='t_'+Date.now()+Math.random().toString(36).slice(2);
-      // On copie aussi les assignees
-      const assignees=d.data().assignees||[];
-      batch.set(doc(db,'days',selectedDate,'tasks',id),{name:d.data().name,order:Date.now(),assignees});
-      const checkData={}; assignees.forEach(pid=>{checkData[pid]=false;});
-      batch.set(checksDoc(selectedDate,id),checkData);
+// ── LOGIN ──
+async function loginWith(name) {
+  name = name.trim();
+  if (!name) { toast('Saisis un pseudo', 'error'); return; }
+
+  const id = name.toLowerCase().replace(/\s+/g,'_');
+  const ref = doc(db, COL_MEMBERS, id);
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) {
+    await setDoc(ref, { name, isAdmin: false, joinedAt: serverTimestamp(), readCount: 0 });
+  }
+
+  const data = snap.exists() ? snap.data() : { name, isAdmin: false };
+  currentUser = { id, name: data.name || name };
+  isAdmin = data.isAdmin || false;
+
+  document.getElementById('user-name-badge').textContent = currentUser.name;
+  document.getElementById('user-avatar').textContent = initials(currentUser.name);
+  document.getElementById('admin-badge-top').style.display = isAdmin ? 'inline' : 'none';
+  document.getElementById('admin-tab').style.display = isAdmin ? 'block' : 'none';
+
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+
+  updateDateDisplay();
+  loadBooks();
+  loadMembers();
+  startCountdown();
+
+  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
+}
+
+function logout() {
+  if (booksUnsubscribe) booksUnsubscribe();
+  currentUser = null;
+  isAdmin = false;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('splash').style.display = 'flex';
+  document.getElementById('member-chips').innerHTML = '';
+  init();
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  event.target.classList.add('active');
+  if (tab === 'admin') { loadProposals(); loadAdminBooks(); }
+  if (tab === 'members') loadMembers();
+}
+
+// ── DATE NAV ──
+function changeDay(delta) {
+  const d = new Date(currentDateStr + 'T12:00:00');
+  d.setDate(d.getDate() + delta);
+  currentDateStr = d.toISOString().slice(0,10);
+  updateDateDisplay();
+  loadBooks();
+}
+function updateDateDisplay() {
+  const el = document.getElementById('date-display');
+  const label = currentDateStr === todayStr() ? "Aujourd'hui — " + formatDateFR(currentDateStr) : formatDateFR(currentDateStr);
+  el.textContent = label;
+  el.className = 'date-display' + (currentDateStr === todayStr() ? ' today' : '');
+  document.getElementById('admin-book-date').value = currentDateStr;
+}
+
+// ── COUNTDOWN ──
+function startCountdown() {
+  setInterval(() => {
+    const now = new Date();
+    const end = new Date();
+    end.setHours(23,59,59,0);
+    const diff = end - now;
+    if (diff < 0) { document.getElementById('countdown-display').textContent = 'Terminé'; return; }
+    const h = Math.floor(diff/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
+    const str = `${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+    document.getElementById('countdown-display').textContent = str;
+    const bar = document.getElementById('deadline-bar');
+    bar.classList.toggle('urgent', h < 2);
+  }, 1000);
+}
+
+// ── LOAD BOOKS ──
+function loadBooks() {
+  if (booksUnsubscribe) booksUnsubscribe();
+  const grid = document.getElementById('books-grid');
+  grid.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>Chargement...</p></div>';
+
+  const q = query(collection(db, COL_BOOKS), where('date','==',currentDateStr), orderBy('createdAt','asc'));
+  booksUnsubscribe = onSnapshot(q, async (snap) => {
+    if (snap.empty) {
+      grid.innerHTML = `<div class="empty-state"><div class="icon">📚</div><p>Aucun livre programmé pour ce jour.</p>${isAdmin?'<button class="btn btn-gold btn-sm" onclick="switchTab(\'admin\');setTimeout(()=>{document.getElementById(\'admin-tab\').dispatchEvent(new Event(\'click\'))},0)">+ Ajouter via Admin</button>':''}</div>`;
+      return;
+    }
+    grid.innerHTML = '';
+    for (const bookDoc of snap.docs) {
+      const book = { id: bookDoc.id, ...bookDoc.data() };
+      // Load parts + reservations for this book
+      const partsSnap = await getDocs(collection(db, COL_BOOKS, book.id, 'parts'));
+      const partsArr = partsSnap.docs.map(p => ({ id: p.id, ...p.data() }));
+      partsArr.sort((a,b) => (a.order||0)-(b.order||0));
+      // Load reservations
+      const resSnap = await getDocs(query(collection(db, COL_RESERVATIONS), where('bookId','==',book.id)));
+      const reservations = {};
+      resSnap.forEach(r => {
+        const d = r.data();
+        if (!reservations[d.partId]) reservations[d.partId] = [];
+        reservations[d.partId].push({ id: r.id, ...d });
+      });
+      grid.appendChild(renderBookCard(book, partsArr, reservations));
     }
   });
-  await batch.commit();
-};
+}
 
-window.clearDayTasks = async () => {
-  if(!confirm('Vider toutes les tâches de ce jour ?')) return;
-  setSyncStatus('syncing');
-  const batch=writeBatch(db);
-  tasks.forEach(t=>{
-    batch.delete(doc(db,'days',selectedDate,'tasks',t.id));
-    batch.delete(checksDoc(selectedDate,t.id));
+// ── RENDER BOOK CARD ──
+function renderBookCard(book, parts, reservations) {
+  const card = document.createElement('div');
+  card.className = 'book-card';
+
+  // Count stats
+  let totalParts = parts.length;
+  let confirmedParts = 0;
+  let takenParts = 0;
+  parts.forEach(p => {
+    const res = reservations[p.id] || [];
+    const myRes = res.find(r => r.userId === currentUser.id);
+    if (myRes?.confirmed) confirmedParts++;
+    else if (res.length > 0) takenParts++;
   });
-  await batch.commit();
-};
+  const progress = totalParts > 0 ? Math.round((confirmedParts/totalParts)*100) : 0;
 
-// ── Render ────────────────────────────────────────────────────────────────────
-function renderTaskList() {
-  const container=document.getElementById('taskList'); container.innerHTML='';
-  if (!tasks.length) {
-    container.innerHTML=`<div class="empty-state"><div class="emoji">📋</div>Aucune tâche pour ce jour.<br>Ajoutez-en une ou copiez depuis un jour précédent.</div>`;
-    return;
+  card.innerHTML = `
+    <div class="book-header" onclick="toggleBook('${book.id}')">
+      <div class="book-cover">${book.icon||'📖'}</div>
+      <div class="book-info">
+        <div class="book-title">${book.title}</div>
+        <div class="book-author">${book.author||''} ${book.isProposal?'<span class="tag tag-proposal">Proposition</span>':''}</div>
+        <div class="book-progress-bar"><div class="book-progress-fill" style="width:${progress}%"></div></div>
+        <div class="book-stats">
+          <span>${confirmedParts}/${totalParts} parties confirmées</span>
+          <span>·</span>
+          <span>${takenParts} réservée${takenParts>1?'s':''}</span>
+        </div>
+      </div>
+      <div class="book-chevron" id="chevron-${book.id}">▼</div>
+    </div>
+    <div class="parts-container" id="parts-${book.id}">
+      <div class="parts-list" id="parts-list-${book.id}"></div>
+      ${isAdmin ? `<div style="padding:10px 20px;border-top:1px solid var(--border)"><button class="btn btn-ghost btn-sm" onclick="deleteBook('${book.id}')">🗑 Supprimer le livre</button></div>` : ''}
+    </div>
+  `;
+
+  // Populate parts list
+  const partsList = card.querySelector(`#parts-list-${book.id}`);
+  if (parts.length === 0) {
+    partsList.innerHTML = '<div style="padding:16px 20px;color:var(--text3);font-size:13px">Aucune partie définie.</div>';
+  } else {
+    parts.forEach(part => {
+      const res = reservations[part.id] || [];
+      const myRes = res.find(r => r.userId === currentUser.id);
+      const isConfirmed = myRes?.confirmed || false;
+      const isTaken = res.length > 0;
+      const isFull = part.maxReaders > 0 && res.length >= part.maxReaders;
+
+      const dotClass = isConfirmed ? 'confirmed' : (isFull ? 'full' : (isTaken ? 'taken' : 'free'));
+
+      const row = document.createElement('div');
+      row.className = 'part-row';
+
+      // Assignees chips
+      const chipsHTML = res.map(r => `
+        <div class="assignee-chip ${r.userId===currentUser.id?'me':''} ${r.confirmed?'confirmed':''}">
+          ${r.userName}
+          ${r.confirmed ? '<span class="check-icon">✓</span>' : ''}
+        </div>
+      `).join('');
+
+      // Actions
+      let actionHTML = '';
+      if (myRes) {
+        if (!myRes.confirmed) {
+          actionHTML = `
+            <button class="btn btn-green btn-sm" onclick="openConfirmModal('${book.id}','${part.id}','${part.label||'Partie'}','${myRes.id}')">✓ Confirmer</button>
+            <button class="btn btn-red btn-sm" onclick="cancelReservation('${myRes.id}')">✕</button>
+          `;
+        } else {
+          actionHTML = '<span style="color:var(--green);font-size:12px">✓ Lu</span>';
+        }
+      } else if (!isFull || isAdmin) {
+        actionHTML = `<button class="btn btn-blue btn-sm" onclick="openReserveModal('${book.id}','${book.title}','${part.id}','${part.label||'Partie'}')">Réserver</button>`;
+      }
+
+      row.innerHTML = `
+        <div class="status-dot ${dotClass}"></div>
+        <div class="part-label">${part.label||('Partie '+(part.order+1))}</div>
+        <div class="part-desc">${part.description||''}</div>
+        <div class="part-assignee"><div class="assignee-chips">${chipsHTML}</div></div>
+        <div class="part-status">${actionHTML}</div>
+      `;
+      partsList.appendChild(row);
+    });
   }
-  tasks.forEach(task=>{
-    const assignees=task.assignees||[];
-    const allDone=isTaskFullyDone(task.id);
-    const card=document.createElement('div');
-    card.className='task-card'+(allDone?' all-done':'');
 
-    // Icône statut
-    const doneIcon=document.createElement('span');
-    doneIcon.style.cssText='font-size:1.1rem;flex-shrink:0;';
-    doneIcon.textContent=allDone?'✅':'⬜';
-    card.appendChild(doneIcon);
+  return card;
+}
 
-    // Nom
-    const nameEl=document.createElement('div');
-    nameEl.className='task-name';
-    nameEl.textContent=task.name;
-    if(allDone){nameEl.style.textDecoration='line-through';nameEl.style.color='var(--text-muted)';}
-    card.appendChild(nameEl);
+function toggleBook(id) {
+  const container = document.getElementById('parts-'+id);
+  const chevron = document.getElementById('chevron-'+id);
+  const isOpen = container.classList.contains('open');
+  container.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+window.toggleBook = toggleBook;
 
-    // Validators (seulement les assignés)
-    const validators=document.createElement('div');
-    validators.className='validators';
+// ── RESERVE ──
+function openReserveModal(bookId, bookTitle, partId, partLabel) {
+  reserveContext = { bookId, bookTitle, partId, partLabel };
+  document.getElementById('reserve-info').textContent = `Livre : "${bookTitle}" — ${partLabel}`;
+  document.getElementById('reserve-part-select').innerHTML = `<option value="${partId}">${partLabel}</option>`;
+  document.getElementById('reserve-note').value = '';
+  openModal('modal-reserve');
+}
+window.openReserveModal = openReserveModal;
 
-    if (!assignees.length) {
-      const hint=document.createElement('span');
-      hint.className='no-assignee';
-      hint.textContent='Aucun intervenant assigné';
-      validators.appendChild(hint);
-    } else {
-      assignees.forEach(pid=>{
-        const p=persons.find(x=>x.id===pid);
-        if(!p) return;
-        const checked=checks[task.id]&&checks[task.id][pid];
-        const dot=document.createElement('div');
-        dot.className='validator-dot'+(checked?' checked':'');
-        dot.innerHTML=`${initials(p.name)}<span class="tooltip">${p.name}${checked?' ✓':''}</span>`;
-        dot.onclick=()=>toggleCheck(task.id,pid);
-        validators.appendChild(dot);
+async function confirmReserve() {
+  if (!reserveContext) return;
+  const note = document.getElementById('reserve-note').value.trim();
+  try {
+    await addDoc(collection(db, COL_RESERVATIONS), {
+      bookId: reserveContext.bookId,
+      partId: reserveContext.partId,
+      userId: currentUser.id,
+      userName: currentUser.name,
+      note,
+      confirmed: false,
+      date: currentDateStr,
+      createdAt: serverTimestamp()
+    });
+    closeModal('modal-reserve');
+    toast('Partie réservée ! 📌', 'success');
+    loadBooks();
+  } catch(e) {
+    toast('Erreur : ' + e.message, 'error');
+  }
+}
+
+// ── CONFIRM READING ──
+function openConfirmModal(bookId, partId, partLabel, resId) {
+  confirmContext = { bookId, partId, partLabel, resId };
+  document.getElementById('confirm-info').textContent = `Confirmer la lecture de : ${partLabel}`;
+  document.getElementById('confirm-comment').value = '';
+  openModal('modal-confirm');
+}
+window.openConfirmModal = openConfirmModal;
+
+async function submitConfirm() {
+  if (!confirmContext) return;
+  try {
+    await updateDoc(doc(db, COL_RESERVATIONS, confirmContext.resId), {
+      confirmed: true,
+      confirmedAt: serverTimestamp(),
+      comment: document.getElementById('confirm-comment').value.trim()
+    });
+    closeModal('modal-confirm');
+    toast('Lecture confirmée ! ✅', 'success');
+    loadBooks();
+  } catch(e) { toast('Erreur : '+e.message, 'error'); }
+}
+
+// ── CANCEL RESERVATION ──
+async function cancelReservation(resId) {
+  if (!confirm('Annuler cette réservation ?')) return;
+  try {
+    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await deleteDoc(doc(db, COL_RESERVATIONS, resId));
+    toast('Réservation annulée', '');
+    loadBooks();
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
+}
+window.cancelReservation = cancelReservation;
+
+// ── PROPOSE (member) ──
+function openProposeModal() {
+  document.getElementById('propose-title').value = '';
+  document.getElementById('propose-author').value = '';
+  document.getElementById('propose-reason').value = '';
+  openModal('modal-propose');
+}
+async function submitProposal() {
+  const title = document.getElementById('propose-title').value.trim();
+  if (!title) { toast('Titre requis', 'error'); return; }
+  try {
+    await addDoc(collection(db, COL_PROPOSALS), {
+      title,
+      author: document.getElementById('propose-author').value.trim(),
+      reason: document.getElementById('propose-reason').value.trim(),
+      proposedBy: currentUser.name,
+      proposedById: currentUser.id,
+      date: currentDateStr,
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
+    closeModal('modal-propose');
+    toast('Proposition envoyée à l\'admin ! 💡', 'success');
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
+}
+
+// ── ADMIN: ADD BOOK ──
+let adminPartFields = [];
+function addPartField() {
+  const idx = adminPartFields.length;
+  adminPartFields.push({ label: '', description: '' });
+  renderPartFields();
+}
+function renderPartFields() {
+  const container = document.getElementById('admin-parts-builder');
+  container.innerHTML = '';
+  adminPartFields.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'part-builder-row';
+    row.innerHTML = `
+      <span>Partie ${i+1}</span>
+      <input type="text" placeholder="Label (ex: Partie A)" value="${p.label}" oninput="adminPartFields[${i}].label=this.value" style="flex:1">
+      <input type="text" placeholder="Description (optionnel)" value="${p.description}" oninput="adminPartFields[${i}].description=this.value" style="flex:2">
+      <button class="remove-btn" onclick="removePartField(${i})">✕</button>
+    `;
+    container.appendChild(row);
+  });
+}
+function removePartField(i) {
+  adminPartFields.splice(i,1);
+  renderPartFields();
+}
+window.removePartField = removePartField;
+
+async function adminAddBook() {
+  if (!isAdmin) return;
+  const title = document.getElementById('admin-book-title').value.trim();
+  const author = document.getElementById('admin-book-author').value.trim();
+  const date = document.getElementById('admin-book-date').value.trim();
+  const icon = document.getElementById('admin-book-icon').value.trim() || '📖';
+
+  if (!title || !date) { toast('Titre et date requis', 'error'); return; }
+
+  try {
+    const bookRef = await addDoc(collection(db, COL_BOOKS), {
+      title, author, date, icon,
+      isProposal: false,
+      createdBy: currentUser.id,
+      createdAt: serverTimestamp()
+    });
+    // Add parts
+    for (let i = 0; i < adminPartFields.length; i++) {
+      await addDoc(collection(db, COL_BOOKS, bookRef.id, 'parts'), {
+        label: adminPartFields[i].label || `Partie ${i+1}`,
+        description: adminPartFields[i].description || '',
+        order: i,
+        maxReaders: 1
       });
     }
-    card.appendChild(validators);
+    // Reset
+    document.getElementById('admin-book-title').value = '';
+    document.getElementById('admin-book-author').value = '';
+    document.getElementById('admin-book-icon').value = '';
+    adminPartFields = [];
+    renderPartFields();
+    toast(`"${title}" ajouté ! 📘`, 'success');
+    loadAdminBooks();
+    loadBooks();
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
+}
 
-    // Actions
-    const actions=document.createElement('div');
-    actions.className='task-actions';
-
-    const editBtn=document.createElement('button');
-    editBtn.className='btn-icon';
-    editBtn.title='Assigner des intervenants';
-    editBtn.textContent='👥';
-    editBtn.onclick=()=>openAssignModal(task.id);
-    actions.appendChild(editBtn);
-
-    const delBtn=document.createElement('button');
-    delBtn.className='btn-icon danger';
-    delBtn.title='Supprimer';
-    delBtn.textContent='✕';
-    delBtn.onclick=()=>deleteTask(task.id);
-    actions.appendChild(delBtn);
-
-    card.appendChild(actions);
+// ── ADMIN: LOAD BOOKS LIST ──
+async function loadAdminBooks() {
+  const container = document.getElementById('admin-books-list');
+  container.innerHTML = '<p style="color:var(--text3);font-size:13px">Chargement...</p>';
+  const snap = await getDocs(query(collection(db, COL_BOOKS), orderBy('date','desc')));
+  if (snap.empty) { container.innerHTML = '<p style="color:var(--text3);font-size:13px">Aucun livre.</p>'; return; }
+  container.innerHTML = '';
+  snap.forEach(d => {
+    const b = d.data();
+    const card = document.createElement('div');
+    card.className = 'proposal-card';
+    card.innerHTML = `
+      <div class="proposal-info">
+        <div class="proposal-title">${b.icon||'📖'} ${b.title} <span style="color:var(--text3)">— ${b.author||'?'}</span></div>
+        <div class="proposal-meta">📅 ${b.date}</div>
+      </div>
+      <div class="proposal-actions">
+        <button class="btn btn-red btn-sm" onclick="deleteBook('${d.id}')">🗑</button>
+      </div>
+    `;
     container.appendChild(card);
   });
 }
 
-function renderProgress() {
-  let totalChecks=0, doneChecks=0, tasksDone=0;
-  tasks.forEach(t=>{
-    const assignees=t.assignees||[];
-    totalChecks+=assignees.length;
-    assignees.forEach(pid=>{if(checks[t.id]&&checks[t.id][pid])doneChecks++;});
-    if(isTaskFullyDone(t.id)) tasksDone++;
+// ── ADMIN: DELETE BOOK ──
+async function deleteBook(bookId) {
+  if (!confirm('Supprimer ce livre et toutes ses données ?')) return;
+  try {
+    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await deleteDoc(doc(db, COL_BOOKS, bookId));
+    toast('Livre supprimé', '');
+    loadBooks();
+    loadAdminBooks();
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
+}
+window.deleteBook = deleteBook;
+
+// ── ADMIN: PROPOSALS ──
+async function loadProposals() {
+  const container = document.getElementById('proposals-list');
+  const snap = await getDocs(query(collection(db, COL_PROPOSALS), where('status','==','pending')));
+  if (snap.empty) { container.innerHTML = '<p style="color:var(--text3);font-size:13px">Aucune proposition en attente.</p>'; return; }
+  container.innerHTML = '';
+  snap.forEach(d => {
+    const p = d.data();
+    const card = document.createElement('div');
+    card.className = 'proposal-card';
+    card.innerHTML = `
+      <div class="proposal-info">
+        <div class="proposal-title">📖 ${p.title} <span style="color:var(--text3)">— ${p.author||'?'}</span></div>
+        <div class="proposal-meta">💬 "${p.reason||'–'}" — par <strong>${p.proposedBy}</strong> pour le ${p.date}</div>
+      </div>
+      <div class="proposal-actions">
+        <button class="btn btn-green btn-sm" onclick="approveProposal('${d.id}')">✓ Valider</button>
+        <button class="btn btn-red btn-sm" onclick="rejectProposal('${d.id}')">✕ Refuser</button>
+      </div>
+    `;
+    container.appendChild(card);
   });
-  const pct=totalChecks>0?Math.round(doneChecks/totalChecks*100):0;
-  document.getElementById('progressBar').style.width=pct+'%';
-  document.getElementById('progressBadge').textContent=`${tasksDone} / ${tasks.length} tâches complètes`;
-  document.getElementById('progressPct').textContent=pct+'%';
 }
 
-function renderSummary() {
-  const tbody=document.getElementById('summaryBody'); tbody.innerHTML='';
-  if (!persons.length) {
-    tbody.innerHTML='<tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:20px;">Aucun intervenant configuré.</td></tr>';
-    return;
-  }
-  persons.forEach(p=>{
-    const assigned=tasks.filter(t=>(t.assignees||[]).includes(p.id));
-    const done=assigned.filter(t=>checks[t.id]&&checks[t.id][p.id]).length;
-    const remaining=assigned.length-done;
-    const pct=assigned.length>0?Math.round(done/assigned.length*100):0;
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td><b>${p.name}</b></td>
-      <td style="font-family:'DM Mono',monospace;color:var(--text-muted)">${assigned.length}</td>
-      <td style="color:var(--green);font-family:'DM Mono',monospace;">${done}</td>
-      <td style="color:${remaining>0?'var(--accent2)':'var(--text-muted)'};font-family:'DM Mono',monospace;">${remaining}</td>
-      <td><span style="font-family:'DM Mono',monospace;font-size:0.8rem;">${pct}%</span>
-        <span class="pct-bar"><span class="pct-bar-fill" style="width:${pct}%"></span></span></td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-window.exportCSV = () => {
-  if(!tasks.length){alert('Aucune tâche à exporter.');return;}
-  let csv='Tâche,Intervenants assignés,'+persons.map(p=>p.name).join(',')+',Statut\n';
-  tasks.forEach(t=>{
-    const assignees=(t.assignees||[]).map(pid=>persons.find(p=>p.id===pid)?.name||'').filter(Boolean).join(' / ');
-    const row=['"'+t.name.replace(/"/g,'""')+'"','"'+assignees+'"'];
-    persons.forEach(p=>{
-      if(!(t.assignees||[]).includes(p.id)){row.push('—');}
-      else{row.push(checks[t.id]&&checks[t.id][p.id]?'✓':'');}
+async function approveProposal(id) {
+  const snap = await getDoc(doc(db, COL_PROPOSALS, id));
+  const p = snap.data();
+  try {
+    // Create book from proposal
+    const bookRef = await addDoc(collection(db, COL_BOOKS), {
+      title: p.title,
+      author: p.author || '',
+      date: p.date,
+      icon: '📖',
+      isProposal: true,
+      createdBy: p.proposedById,
+      createdAt: serverTimestamp()
     });
-    row.push(isTaskFullyDone(t.id)?'Complète':'En cours');
-    csv+=row.join(',')+'\n';
-  });
-  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`taches_${selectedDate}.csv`; a.click();
-};
+    await updateDoc(doc(db, COL_PROPOSALS, id), { status: 'approved' });
+    toast('Proposition validée ! Le livre a été ajouté.', 'success');
+    loadProposals();
+    loadBooks();
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
+}
+async function rejectProposal(id) {
+  await updateDoc(doc(db, COL_PROPOSALS, id), { status: 'rejected' });
+  toast('Proposition refusée.', '');
+  loadProposals();
+}
+window.approveProposal = approveProposal;
+window.rejectProposal = rejectProposal;
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-document.getElementById('currentDate').value=selectedDate;
-listenDay(selectedDate);
+// ── MEMBERS ──
+async function loadMembers() {
+  const grid = document.getElementById('members-grid');
+  grid.innerHTML = '';
+  const snap = await getDocs(collection(db, COL_MEMBERS));
+  document.getElementById('members-count').textContent = snap.size + ' membre' + (snap.size>1?'s':'');
+  snap.forEach(d => {
+    const m = d.data();
+    const card = document.createElement('div');
+    card.className = 'member-card' + (m.isAdmin?' admin-card':'');
+    card.innerHTML = `
+      <div class="member-card-avatar">${initials(m.name)}</div>
+      <div class="member-card-name">${m.name} ${m.isAdmin?'<span class="admin-badge">Admin</span>':''}</div>
+      <div class="member-card-stats">Membre actif</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ── START ──
+init();
 </script>
 </body>
 </html>
