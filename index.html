@@ -6,632 +6,181 @@
 <title>BookTrack</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
-
   :root {
-    --bg: #0f0e0c;
-    --bg2: #191814;
-    --bg3: #211f1a;
-    --surface: #2a271f;
-    --surface2: #332f24;
-    --border: rgba(255,240,200,0.08);
-    --border2: rgba(255,240,200,0.15);
-    --gold: #d4a84b;
-    --gold2: #e8c06a;
-    --gold3: #f5d98a;
-    --amber: #c07a20;
-    --text: #f0e8d8;
-    --text2: #a89880;
-    --text3: #6a5f4a;
-    --green: #4a9960;
-    --green-bg: rgba(74,153,96,0.12);
-    --red: #c04040;
-    --red-bg: rgba(192,64,64,0.12);
-    --blue: #4a80b0;
-    --blue-bg: rgba(74,128,176,0.12);
-    --radius: 10px;
-    --radius-lg: 16px;
+    --bg:#0f0e0c; --bg2:#191814; --bg3:#211f1a;
+    --surface:#2a271f; --surface2:#332f24;
+    --border:rgba(255,240,200,0.08); --border2:rgba(255,240,200,0.15);
+    --gold:#d4a84b; --gold2:#e8c06a; --gold3:#f5d98a; --amber:#c07a20;
+    --text:#f0e8d8; --text2:#a89880; --text3:#6a5f4a;
+    --green:#4a9960; --green-bg:rgba(74,153,96,0.12);
+    --red:#c04040; --red-bg:rgba(192,64,64,0.12);
+    --blue:#4a80b0; --blue-bg:rgba(74,128,176,0.12);
+    --radius:10px; --radius-lg:16px;
   }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  #splash{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:40px;background:radial-gradient(ellipse at 50% 40%,#2a220a 0%,#0f0e0c 70%);}
+  .splash-logo{text-align:center;}
+  .splash-logo h1{font-family:'Lora',serif;font-size:48px;font-weight:600;background:linear-gradient(135deg,var(--gold),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .splash-logo p{color:var(--text2);font-size:13px;letter-spacing:3px;text-transform:uppercase;margin-top:8px;}
+  .splash-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:32px;width:360px;display:flex;flex-direction:column;gap:16px;}
+  .splash-card h2{font-size:16px;font-weight:500;color:var(--text2);text-align:center;}
+  .member-list{display:flex;flex-wrap:wrap;gap:8px;}
+  .member-chip{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;transition:all .2s;color:var(--text2);}
+  .member-chip:hover{background:var(--surface2);border-color:var(--gold);color:var(--gold);}
+  .divider{display:flex;align-items:center;gap:12px;color:var(--text3);font-size:12px;}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
 
-  body {
-    font-family: 'Sora', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 14px;
-  }
+  input[type=text],input[type=number]{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-family:'Sora',sans-serif;font-size:14px;width:100%;outline:none;transition:border-color .2s;}
+  input[type=text]:focus,input[type=number]:focus{border-color:var(--gold);}
+  input::placeholder{color:var(--text3);}
+  select{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-family:'Sora',sans-serif;font-size:14px;width:100%;outline:none;appearance:none;}
+  select:focus{border-color:var(--gold);}
+  option{background:var(--bg2);}
+  textarea{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-family:'Sora',sans-serif;font-size:14px;width:100%;outline:none;resize:vertical;min-height:80px;transition:border-color .2s;}
+  textarea:focus{border-color:var(--gold);}
 
-  /* ── SPLASH ── */
-  #splash {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 40px;
-    background: radial-gradient(ellipse at 50% 40%, #2a220a 0%, #0f0e0c 70%);
-  }
-  .splash-logo { text-align: center; }
-  .splash-logo h1 {
-    font-family: 'Lora', serif;
-    font-size: 48px;
-    font-weight: 600;
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, var(--gold), var(--gold3));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .splash-logo p { color: var(--text2); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; }
-  .splash-card {
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    width: 360px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .splash-card h2 { font-size: 16px; font-weight: 500; color: var(--text2); text-align: center; }
-  .member-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .member-chip {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all .2s;
-    color: var(--text2);
-  }
-  .member-chip:hover { background: var(--surface2); border-color: var(--gold); color: var(--gold); }
-  .divider { display: flex; align-items: center; gap: 12px; color: var(--text3); font-size: 12px; }
-  .divider::before, .divider::after { content:''; flex:1; height:1px; background: var(--border); }
-  input[type=text] {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: 'Sora', sans-serif;
-    font-size: 14px;
-    width: 100%;
-    outline: none;
-    transition: border-color .2s;
-  }
-  input[type=text]:focus { border-color: var(--gold); }
-  input[type=text]::placeholder { color: var(--text3); }
-  .btn {
-    padding: 10px 20px;
-    border-radius: var(--radius);
-    border: none;
-    cursor: pointer;
-    font-family: 'Sora', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all .2s;
-  }
-  .btn-gold { background: var(--gold); color: #0f0e0c; }
-  .btn-gold:hover { background: var(--gold2); }
-  .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text2); }
-  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
-  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
-  .btn-green { background: var(--green-bg); border: 1px solid var(--green); color: var(--green); }
-  .btn-green:hover { background: var(--green); color: white; }
-  .btn-red { background: var(--red-bg); border: 1px solid var(--red); color: var(--red); }
-  .btn-red:hover { background: var(--red); color: white; }
-  .btn-blue { background: var(--blue-bg); border: 1px solid var(--blue); color: var(--blue); }
-  .btn-blue:hover { background: var(--blue); color: white; }
-  .btn-danger { background: var(--red); color: white; }
-  .btn-danger:hover { background: #a03030; }
+  .btn{padding:10px 20px;border-radius:var(--radius);border:none;cursor:pointer;font-family:'Sora',sans-serif;font-size:14px;font-weight:500;transition:all .2s;}
+  .btn-gold{background:var(--gold);color:#0f0e0c;}
+  .btn-gold:hover{background:var(--gold2);}
+  .btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text2);}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+  .btn-sm{padding:6px 12px;font-size:12px;border-radius:6px;}
+  .btn-green{background:var(--green-bg);border:1px solid var(--green);color:var(--green);}
+  .btn-green:hover{background:var(--green);color:white;}
+  .btn-red{background:var(--red-bg);border:1px solid var(--red);color:var(--red);}
+  .btn-red:hover{background:var(--red);color:white;}
+  .btn-blue{background:var(--blue-bg);border:1px solid var(--blue);color:var(--blue);}
+  .btn-blue:hover{background:var(--blue);color:white;}
 
-  /* ── MAIN APP ── */
-  #app { display: none; flex-direction: column; min-height: 100vh; }
+  #app{display:none;flex-direction:column;min-height:100vh;}
+  .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;}
+  .topbar-logo{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--gold);flex:1;}
+  .topbar-date{color:var(--text2);font-size:13px;}
+  .user-badge{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:4px 12px 4px 8px;display:flex;align-items:center;gap:8px;font-size:13px;}
+  .user-avatar{width:24px;height:24px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#0f0e0c;}
+  .admin-badge{background:var(--gold);color:#0f0e0c;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;text-transform:uppercase;}
+  .nav-tabs{display:flex;gap:4px;background:var(--surface);border-radius:8px;padding:4px;}
+  .nav-tab{padding:5px 14px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .2s;border:none;background:none;font-family:'Sora',sans-serif;}
+  .nav-tab.active{background:var(--surface2);color:var(--text);}
+  .logout-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;padding:4px;transition:color .2s;}
+  .logout-btn:hover{color:var(--red);}
 
-  /* ── TOP BAR ── */
-  .topbar {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .topbar-logo {
-    font-family: 'Lora', serif;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--gold);
-    letter-spacing: -0.5px;
-    flex: 1;
-  }
-  .topbar-date { color: var(--text2); font-size: 13px; }
-  .user-badge {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 20px;
-    padding: 4px 12px 4px 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-  }
-  .user-avatar {
-    width: 24px; height: 24px;
-    background: var(--gold);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px;
-    font-weight: 600;
-    color: #0f0e0c;
-  }
-  .admin-badge {
-    background: var(--gold);
-    color: #0f0e0c;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 6px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .nav-tabs {
-    display: flex;
-    gap: 4px;
-    background: var(--surface);
-    border-radius: 8px;
-    padding: 4px;
-  }
-  .nav-tab {
-    padding: 5px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--text2);
-    transition: all .2s;
-    border: none;
-    background: none;
-    font-family: 'Sora', sans-serif;
-  }
-  .nav-tab.active { background: var(--surface2); color: var(--text); }
-  .nav-tab:hover:not(.active) { color: var(--text); }
-  .logout-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text3);
-    font-size: 18px;
-    padding: 4px;
-    transition: color .2s;
-  }
-  .logout-btn:hover { color: var(--red); }
+  .content{flex:1;padding:24px;max-width:1000px;margin:0 auto;width:100%;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
 
-  /* ── CONTENT ── */
-  .content { flex: 1; padding: 24px; max-width: 1000px; margin: 0 auto; width: 100%; }
+  .date-nav{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+  .date-nav button{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--text2);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;transition:all .2s;}
+  .date-nav button:hover{border-color:var(--gold);color:var(--gold);}
+  .date-display{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--text);flex:1;text-align:center;}
+  .date-display.today{color:var(--gold);}
 
-  /* ── TAB PANELS ── */
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+  .books-grid{display:flex;flex-direction:column;gap:16px;}
+  .book-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+  .book-header{padding:16px 20px;display:flex;align-items:flex-start;gap:16px;cursor:pointer;}
+  .book-cover{width:48px;height:64px;background:var(--surface2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:1px solid var(--border);}
+  .book-info{flex:1;}
+  .book-title{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px;}
+  .book-author{color:var(--text2);font-size:13px;margin-bottom:8px;}
+  .book-progress-bar{height:4px;background:var(--surface);border-radius:2px;overflow:hidden;margin-bottom:6px;}
+  .book-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .5s;}
+  .book-stats{display:flex;gap:16px;font-size:12px;color:var(--text3);}
+  .book-chevron{color:var(--text3);font-size:18px;transition:transform .3s;margin-left:auto;}
+  .book-chevron.open{transform:rotate(180deg);}
 
-  /* ── DATE NAV ── */
-  .date-nav {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-  .date-nav button {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 12px;
-    color: var(--text2);
-    cursor: pointer;
-    font-family: 'Sora', sans-serif;
-    font-size: 13px;
-    transition: all .2s;
-  }
-  .date-nav button:hover { border-color: var(--gold); color: var(--gold); }
-  .date-display {
-    font-family: 'Lora', serif;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--text);
-    flex: 1;
-    text-align: center;
-  }
-  .date-display.today { color: var(--gold); }
+  .parts-container{display:none;border-top:1px solid var(--border);}
+  .parts-container.open{display:block;}
+  .part-row{display:flex;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid var(--border);transition:background .2s;}
+  .part-row:hover{background:var(--surface);}
+  .part-label{width:120px;font-size:13px;color:var(--text2);flex-shrink:0;}
+  .part-desc{flex:1;font-size:13px;color:var(--text);}
+  .part-assignee{min-width:180px;}
+  .assignee-chips{display:flex;flex-wrap:wrap;gap:4px;}
+  .assignee-chip{background:var(--surface2);border-radius:12px;padding:3px 10px;font-size:11px;color:var(--text2);}
+  .assignee-chip.me{background:rgba(212,168,75,0.15);color:var(--gold2);border:1px solid rgba(212,168,75,0.3);}
+  .assignee-chip.confirmed{background:var(--green-bg);color:var(--green);}
+  .part-status{flex-shrink:0;display:flex;gap:6px;align-items:center;}
+  .status-dot{width:8px;height:8px;border-radius:50%;}
+  .status-dot.free{background:var(--text3);}
+  .status-dot.taken{background:var(--amber);}
+  .status-dot.confirmed{background:var(--green);}
+  .status-dot.full{background:var(--red);}
 
-  /* ── BOOK CARD ── */
-  .books-grid { display: flex; flex-direction: column; gap: 16px; }
-  .book-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    transition: border-color .2s;
-  }
-  .book-card:hover { border-color: var(--border2); }
-  .book-header {
-    padding: 16px 20px;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    cursor: pointer;
-  }
-  .book-cover {
-    width: 48px; height: 64px;
-    background: var(--surface2);
-    border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-    border: 1px solid var(--border);
-  }
-  .book-info { flex: 1; }
-  .book-title {
-    font-family: 'Lora', serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .book-author { color: var(--text2); font-size: 13px; margin-bottom: 8px; }
-  .book-progress-bar {
-    height: 4px;
-    background: var(--surface);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 6px;
-  }
-  .book-progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width .5s; }
-  .book-stats { display: flex; gap: 16px; font-size: 12px; color: var(--text3); }
-  .book-chevron { color: var(--text3); font-size: 18px; transition: transform .3s; margin-left: auto; }
-  .book-chevron.open { transform: rotate(180deg); }
+  .empty-state{text-align:center;padding:60px 20px;color:var(--text3);}
+  .empty-state .icon{font-size:40px;margin-bottom:12px;}
+  .empty-state p{font-size:14px;margin-bottom:16px;}
 
-  /* ── PARTS LIST ── */
-  .parts-container { display: none; border-top: 1px solid var(--border); }
-  .parts-container.open { display: block; }
-  .parts-list { display: flex; flex-direction: column; gap: 0; }
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
+  .modal h3{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--gold);}
+  .modal-row{display:flex;gap:10px;align-items:flex-end;}
+  .form-group{display:flex;flex-direction:column;gap:6px;flex:1;}
+  .form-label{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;}
 
-  .part-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    border-top: 1px solid var(--border);
-    transition: background .2s;
-  }
-  .part-row:hover { background: var(--surface); }
-  .part-label {
-    width: 120px;
-    font-size: 13px;
-    color: var(--text2);
-    flex-shrink: 0;
-  }
-  .part-desc { flex: 1; font-size: 13px; color: var(--text); }
-  .part-assignee {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 180px;
-  }
-  .assignee-chips { display: flex; flex-wrap: wrap; gap: 4px; }
-  .assignee-chip {
-    background: var(--surface2);
-    border-radius: 12px;
-    padding: 3px 10px;
-    font-size: 11px;
-    color: var(--text2);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .assignee-chip.me { background: rgba(212,168,75,0.15); color: var(--gold2); border: 1px solid rgba(212,168,75,0.3); }
-  .assignee-chip.confirmed { background: var(--green-bg); color: var(--green); }
-  .check-icon { font-size: 10px; }
-  .part-status { flex-shrink: 0; display: flex; gap: 6px; align-items: center; }
-  .status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .status-dot.free { background: var(--text3); }
-  .status-dot.taken { background: var(--amber); }
-  .status-dot.confirmed { background: var(--green); }
-  .status-dot.full { background: var(--red); }
+  .parts-builder{display:flex;flex-direction:column;gap:8px;}
+  .part-builder-row{display:flex;gap:8px;align-items:center;background:var(--surface);border-radius:8px;padding:8px 12px;}
+  .part-builder-row span{color:var(--text3);font-size:12px;min-width:60px;}
+  .remove-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:2px 6px;transition:color .2s;}
+  .remove-btn:hover{color:var(--red);}
 
-  /* ── EMPTY STATE ── */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text3);
-  }
-  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; margin-bottom: 16px; }
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .section-title{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--text);}
+  .proposal-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+  .proposal-info{flex:1;}
+  .proposal-title{font-size:14px;color:var(--text);margin-bottom:2px;}
+  .proposal-meta{font-size:12px;color:var(--text3);}
 
-  /* ── MODAL ── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 200;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-lg);
-    padding: 28px;
-    width: 100%;
-    max-width: 480px;
-    max-height: 85vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .modal h3 {
-    font-family: 'Lora', serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--gold);
-  }
-  .modal-row { display: flex; gap: 10px; align-items: flex-end; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-  .form-label { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+  .members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+  .member-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;}
+  .member-card-avatar{width:48px;height:48px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--gold);margin:0 auto 10px;border:2px solid var(--border2);}
+  .member-card-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;}
+  .member-card-stats{font-size:12px;color:var(--text3);}
+  .member-card.admin-card{border-color:rgba(212,168,75,0.3);background:rgba(212,168,75,0.04);}
 
-  /* ── PARTS BUILDER ── */
-  .parts-builder { display: flex; flex-direction: column; gap: 8px; }
-  .part-builder-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    background: var(--surface);
-    border-radius: 8px;
-    padding: 8px 12px;
-  }
-  .part-builder-row span { color: var(--text3); font-size: 12px; min-width: 60px; }
-  .part-builder-row input { flex: 1; }
-  .remove-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text3);
-    font-size: 16px;
-    padding: 2px 6px;
-    transition: color .2s;
-  }
-  .remove-btn:hover { color: var(--red); }
+  #toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 18px;font-size:13px;color:var(--text);z-index:300;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
+  #toast.show{opacity:1;transform:translateY(0);}
+  #toast.success{border-color:var(--green);color:var(--green);}
+  #toast.error{border-color:var(--red);color:var(--red);}
 
-  /* ── ADMIN PANEL ── */
-  .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  .section-title {
-    font-family: 'Lora', serif;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text);
-  }
-  .proposals-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
-  .proposal-card {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .proposal-info { flex: 1; }
-  .proposal-title { font-size: 14px; color: var(--text); margin-bottom: 2px; }
-  .proposal-meta { font-size: 12px; color: var(--text3); }
-  .proposal-actions { display: flex; gap: 8px; }
+  .deadline-bar{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:13px;}
+  .deadline-bar .label{color:var(--text2);}
+  .deadline-bar .time{color:var(--gold);font-weight:500;font-variant-numeric:tabular-nums;}
+  .deadline-bar.urgent .time{color:var(--red);}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-size:12px;color:var(--text3);}
+  .legend-item{display:flex;align-items:center;gap:6px;}
+  .propose-banner{background:linear-gradient(135deg,rgba(212,168,75,0.08),rgba(212,168,75,0.03));border:1px dashed rgba(212,168,75,0.3);border-radius:var(--radius);padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+  .propose-banner p{flex:1;font-size:13px;color:var(--text2);}
 
-  /* ── MEMBRES TAB ── */
-  .members-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-  }
-  .member-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    text-align: center;
-  }
-  .member-card-avatar {
-    width: 48px; height: 48px;
-    background: var(--surface2);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--gold);
-    margin: 0 auto 10px;
-    border: 2px solid var(--border2);
-  }
-  .member-card-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-  .member-card-stats { font-size: 12px; color: var(--text3); }
-  .member-card.admin-card { border-color: rgba(212,168,75,0.3); background: rgba(212,168,75,0.04); }
+  .pdf-drop-zone{border:2px dashed var(--border2);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);position:relative;}
+  .pdf-drop-zone:hover,.pdf-drop-zone.drag-over{border-color:var(--gold);background:rgba(212,168,75,0.05);}
+  .pdf-drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .pdf-info{background:rgba(212,168,75,0.08);border:1px solid rgba(212,168,75,0.3);border-radius:var(--radius);padding:12px 16px;display:none;gap:12px;align-items:flex-start;font-size:13px;}
+  .pdf-info.show{display:flex;}
+  .pdf-pages{color:var(--gold);font-weight:600;font-size:18px;}
+  .pdf-split-preview{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .pdf-split-chip{background:var(--surface2);border:1px solid rgba(212,168,75,0.3);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--gold2);}
 
-  /* ── TOAST ── */
-  #toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    padding: 12px 18px;
-    font-size: 13px;
-    color: var(--text);
-    z-index: 300;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all .3s;
-    pointer-events: none;
-  }
-  #toast.show { opacity: 1; transform: translateY(0); }
-  #toast.success { border-color: var(--green); color: var(--green); }
-  #toast.error { border-color: var(--red); color: var(--red); }
+  .tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;}
+  .tag-proposal{background:rgba(192,122,32,0.15);color:var(--amber);border:1px solid var(--amber);}
 
-  /* ── COUNTDOWN ── */
-  .deadline-bar {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    font-size: 13px;
-  }
-  .deadline-bar .label { color: var(--text2); }
-  .deadline-bar .time { color: var(--gold); font-weight: 500; font-variant-numeric: tabular-nums; }
-  .deadline-bar.urgent .time { color: var(--red); }
-
-  /* ── LEGEND ── */
-  .legend {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-    font-size: 12px;
-    color: var(--text3);
-  }
-  .legend-item { display: flex; align-items: center; gap: 6px; }
-
-  /* ── PROPOSE FORM (member) ── */
-  .propose-banner {
-    background: linear-gradient(135deg, rgba(212,168,75,0.08), rgba(212,168,75,0.03));
-    border: 1px dashed rgba(212,168,75,0.3);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .propose-banner p { flex: 1; font-size: 13px; color: var(--text2); }
-
-  select {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: 'Sora', sans-serif;
-    font-size: 14px;
-    width: 100%;
-    outline: none;
-    transition: border-color .2s;
-    appearance: none;
-  }
-  select:focus { border-color: var(--gold); }
-  option { background: var(--bg2); }
-
-  textarea {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: 'Sora', sans-serif;
-    font-size: 14px;
-    width: 100%;
-    outline: none;
-    resize: vertical;
-    min-height: 80px;
-    transition: border-color .2s;
-  }
-  textarea:focus { border-color: var(--gold); }
-
-  .tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
-  .tag-new { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue); }
-  .tag-proposal { background: rgba(192,122,32,0.15); color: var(--amber); border: 1px solid var(--amber); }
-
-  .scroll-top { scrollbar-width: thin; scrollbar-color: var(--surface2) transparent; }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
-
-  /* ── PDF UPLOAD ── */
-  .pdf-drop-zone {
-    border: 2px dashed var(--border2);
-    border-radius: var(--radius);
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all .2s;
-    background: var(--surface);
-    position: relative;
-  }
-  .pdf-drop-zone:hover, .pdf-drop-zone.drag-over { border-color: var(--gold); background: rgba(212,168,75,0.05); }
-  .pdf-drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .pdf-drop-zone .drop-icon { font-size: 28px; margin-bottom: 6px; }
-  .pdf-drop-zone .drop-text { font-size: 13px; color: var(--text2); }
-  .pdf-info {
-    background: rgba(212,168,75,0.08);
-    border: 1px solid rgba(212,168,75,0.3);
-    border-radius: var(--radius);
-    padding: 12px 16px;
-    display: none;
-    gap: 12px;
-    align-items: center;
-    font-size: 13px;
-  }
-  .pdf-info.show { display: flex; }
-  .pdf-info .pdf-pages { color: var(--gold); font-weight: 600; font-size: 18px; }
-  .pdf-pages-detail { color: var(--text2); font-size: 12px; margin-top: 2px; }
-  .pdf-split-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
-  }
-  .pdf-split-chip {
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 6px;
-    padding: 4px 10px;
-    font-size: 12px;
-    color: var(--text2);
-  }
-  .pdf-split-chip.active { background: rgba(212,168,75,0.15); border-color: var(--gold); color: var(--gold2); }
-
-  @media (max-width: 600px) {
-    .topbar { padding: 0 12px; gap: 8px; }
-    .topbar-logo { font-size: 16px; }
-    .topbar-date { display: none; }
-    .content { padding: 12px; }
-    .part-row { flex-wrap: wrap; gap: 8px; }
-    .nav-tab { padding: 5px 8px; font-size: 12px; }
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+  @media(max-width:600px){
+    .topbar{padding:0 12px;gap:8px;}
+    .topbar-logo{font-size:16px;}
+    .topbar-date{display:none;}
+    .content{padding:12px;}
+    .part-row{flex-wrap:wrap;}
+    .nav-tab{padding:5px 8px;font-size:12px;}
   }
 </style>
 </head>
 <body>
 
-<!-- ══ SPLASH SCREEN ══ -->
 <div id="splash">
   <div class="splash-logo">
     <h1>📖 BookTrack</h1>
@@ -642,42 +191,37 @@
     <div class="member-list" id="member-chips"></div>
     <div class="divider">ou</div>
     <input type="text" id="pseudo-input" placeholder="Nouveau pseudo..." maxlength="30">
-    <button class="btn btn-gold" onclick="loginWith(document.getElementById('pseudo-input').value)">Rejoindre →</button>
+    <button class="btn btn-gold" id="btn-rejoindre">Rejoindre →</button>
   </div>
 </div>
 
-<!-- ══ MAIN APP ══ -->
 <div id="app">
-  <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-logo">📖 BookTrack</div>
     <div class="topbar-date" id="topbar-date"></div>
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="switchTab('today')">Aujourd'hui</button>
-      <button class="nav-tab" onclick="switchTab('members')">Membres</button>
-      <button class="nav-tab" id="admin-tab" style="display:none" onclick="switchTab('admin')">Admin</button>
+      <button class="nav-tab active" id="tab-today">Aujourd'hui</button>
+      <button class="nav-tab" id="tab-members">Membres</button>
+      <button class="nav-tab" id="tab-admin" style="display:none">Admin</button>
     </div>
     <div class="user-badge">
       <div class="user-avatar" id="user-avatar"></div>
       <span id="user-name-badge"></span>
       <span class="admin-badge" id="admin-badge-top" style="display:none">Admin</span>
     </div>
-    <button class="logout-btn" title="Se déconnecter" onclick="logout()">⏏</button>
+    <button class="logout-btn" id="btn-logout">⏏</button>
   </div>
 
-  <!-- CONTENT -->
-  <div class="content scroll-top">
-
-    <!-- ══ TODAY TAB ══ -->
+  <div class="content">
     <div class="tab-panel active" id="panel-today">
       <div class="deadline-bar" id="deadline-bar">
         <span class="label">🕐 Délai de confirmation</span>
         <span class="time" id="countdown-display">–</span>
       </div>
       <div class="date-nav">
-        <button onclick="changeDay(-1)">← Avant</button>
+        <button id="btn-prev-day">← Avant</button>
         <div class="date-display" id="date-display"></div>
-        <button onclick="changeDay(1)">Après →</button>
+        <button id="btn-next-day">Après →</button>
       </div>
       <div class="legend">
         <div class="legend-item"><div class="status-dot free"></div> Libre</div>
@@ -685,20 +229,16 @@
         <div class="legend-item"><div class="status-dot confirmed"></div> Confirmé</div>
         <div class="legend-item"><div class="status-dot full"></div> Complet</div>
       </div>
-      <div class="propose-banner" id="propose-banner">
+      <div class="propose-banner">
         <span style="font-size:20px">💡</span>
         <p>Tu veux proposer un livre pour cette journée ?</p>
-        <button class="btn btn-gold btn-sm" onclick="openProposeModal()">Proposer</button>
+        <button class="btn btn-gold btn-sm" id="btn-open-propose">Proposer</button>
       </div>
       <div class="books-grid" id="books-grid">
-        <div class="empty-state">
-          <div class="icon">📚</div>
-          <p>Chargement des livres...</p>
-        </div>
+        <div class="empty-state"><div class="icon">📚</div><p>Chargement...</p></div>
       </div>
     </div>
 
-    <!-- ══ MEMBERS TAB ══ -->
     <div class="tab-panel" id="panel-members">
       <div class="section-header">
         <div class="section-title">👥 Membres du groupe</div>
@@ -707,159 +247,107 @@
       <div class="members-grid" id="members-grid"></div>
     </div>
 
-    <!-- ══ ADMIN TAB ══ -->
     <div class="tab-panel" id="panel-admin">
-      <div class="section-header">
-        <div class="section-title">⚡ Propositions en attente</div>
-      </div>
-      <div class="proposals-list" id="proposals-list">
-        <p style="color:var(--text3);font-size:13px">Aucune proposition en attente.</p>
-      </div>
+      <div class="section-header"><div class="section-title">⚡ Propositions en attente</div></div>
+      <div id="proposals-list" style="margin-bottom:24px"><p style="color:var(--text3);font-size:13px">Aucune proposition.</p></div>
 
-      <div class="section-header">
-        <div class="section-title">📘 Ajouter un livre</div>
-      </div>
+      <div class="section-header"><div class="section-title">📘 Ajouter un livre</div></div>
       <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:12px;">
         <div class="modal-row">
-          <div class="form-group">
-            <label class="form-label">Titre *</label>
-            <input type="text" id="admin-book-title" placeholder="Ex: L'Alchimiste">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Auteur</label>
-            <input type="text" id="admin-book-author" placeholder="Paulo Coelho">
-          </div>
+          <div class="form-group"><label class="form-label">Titre *</label><input type="text" id="admin-book-title" placeholder="Ex: L'Alchimiste"></div>
+          <div class="form-group"><label class="form-label">Auteur</label><input type="text" id="admin-book-author" placeholder="Paulo Coelho"></div>
         </div>
         <div class="modal-row">
-          <div class="form-group">
-            <label class="form-label">Date *</label>
-            <input type="text" id="admin-book-date" placeholder="2025-01-15">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Icône</label>
-            <input type="text" id="admin-book-icon" placeholder="📖" maxlength="4" style="width:80px">
-          </div>
+          <div class="form-group"><label class="form-label">Date *</label><input type="text" id="admin-book-date"></div>
+          <div class="form-group"><label class="form-label">Icône</label><input type="text" id="admin-book-icon" placeholder="📖" maxlength="4" style="width:80px"></div>
         </div>
-        <!-- PDF Upload -->
         <div>
           <label class="form-label" style="margin-bottom:8px;display:block">PDF du livre (optionnel)</label>
           <div class="pdf-drop-zone" id="pdf-drop-zone">
-            <input type="file" id="pdf-file-input" accept=".pdf" onchange="handlePdfUpload(this.files[0])">
-            <div class="drop-icon">📄</div>
-            <div class="drop-text">Glisse le PDF ici ou clique pour choisir</div>
+            <input type="file" id="pdf-file-input" accept=".pdf">
+            <div style="font-size:28px;margin-bottom:6px">📄</div>
+            <div style="font-size:13px;color:var(--text2)">Glisse le PDF ici ou clique pour choisir</div>
           </div>
           <div class="pdf-info" id="pdf-info">
             <div>
               <div class="pdf-pages" id="pdf-page-count">–</div>
-              <div class="pdf-pages-detail">pages détectées</div>
+              <div style="color:var(--text2);font-size:12px">pages</div>
             </div>
             <div style="flex:1">
               <div style="color:var(--text);font-size:13px;margin-bottom:6px" id="pdf-filename"></div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="color:var(--text2);font-size:12px">Nombre de parties :</span>
-                <input type="number" id="pdf-parts-count" min="1" max="50" value="2" style="width:60px;padding:4px 8px;font-size:13px" oninput="updatePdfSplit()">
-                <button class="btn btn-gold btn-sm" onclick="applyPdfSplit()">Découper</button>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <span style="color:var(--text2);font-size:12px">Nb de parties :</span>
+                <input type="number" id="pdf-parts-count" min="1" max="50" value="2" style="width:60px;padding:4px 8px;font-size:13px">
+                <button class="btn btn-gold btn-sm" id="btn-apply-split">Découper</button>
               </div>
               <div class="pdf-split-preview" id="pdf-split-preview"></div>
             </div>
-            <button class="btn btn-ghost btn-sm" onclick="clearPdf()" style="align-self:flex-start">✕</button>
+            <button class="btn btn-ghost btn-sm" id="btn-clear-pdf" style="align-self:flex-start">✕</button>
           </div>
         </div>
-
-        <!-- Parties manuelles -->
         <div>
           <label class="form-label" style="margin-bottom:8px;display:block">Parties</label>
           <div class="parts-builder" id="admin-parts-builder"></div>
-          <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addPartField()">+ Ajouter une partie manuellement</button>
+          <button class="btn btn-ghost btn-sm" style="margin-top:8px" id="btn-add-part">+ Ajouter une partie</button>
         </div>
-        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px">
-          <button class="btn btn-gold" onclick="adminAddBook()">Ajouter le livre</button>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px">
+          <button class="btn btn-gold" id="btn-admin-add-book">Ajouter le livre</button>
         </div>
       </div>
 
-      <div class="section-header" style="margin-top:24px">
-        <div class="section-title">📅 Livres existants</div>
-      </div>
+      <div class="section-header" style="margin-top:24px"><div class="section-title">📅 Livres existants</div></div>
       <div id="admin-books-list" style="display:flex;flex-direction:column;gap:8px;"></div>
     </div>
-
   </div>
 </div>
 
-<!-- ══ MODALS ══ -->
-
-<!-- Reserve Modal -->
 <div class="modal-overlay" id="modal-reserve">
   <div class="modal">
     <h3>📌 Réserver une partie</h3>
     <p style="color:var(--text2);font-size:13px" id="reserve-info"></p>
-    <div class="form-group">
-      <label class="form-label">Partie</label>
-      <select id="reserve-part-select"></select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Note (optionnel)</label>
-      <input type="text" id="reserve-note" placeholder="Ex: Chapitres 1-5">
-    </div>
+    <div class="form-group"><label class="form-label">Note (optionnel)</label><input type="text" id="reserve-note" placeholder="Ex: Chapitres 1-5"></div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-reserve')">Annuler</button>
-      <button class="btn btn-gold" onclick="confirmReserve()">Réserver</button>
+      <button class="btn btn-ghost" id="btn-reserve-cancel">Annuler</button>
+      <button class="btn btn-gold" id="btn-reserve-confirm">Réserver</button>
     </div>
   </div>
 </div>
 
-<!-- Confirm Reading Modal -->
 <div class="modal-overlay" id="modal-confirm">
   <div class="modal">
     <h3>✅ Confirmer la lecture</h3>
     <p style="color:var(--text2);font-size:13px" id="confirm-info"></p>
-    <div class="form-group">
-      <label class="form-label">Commentaire (optionnel)</label>
-      <textarea id="confirm-comment" placeholder="Ton ressenti sur cette partie..."></textarea>
-    </div>
+    <div class="form-group"><label class="form-label">Commentaire (optionnel)</label><textarea id="confirm-comment" placeholder="Ton ressenti..."></textarea></div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-confirm')">Annuler</button>
-      <button class="btn btn-green" onclick="submitConfirm()">✓ Confirmer la lecture</button>
+      <button class="btn btn-ghost" id="btn-confirm-cancel">Annuler</button>
+      <button class="btn btn-green" id="btn-confirm-ok">✓ Confirmer la lecture</button>
     </div>
   </div>
 </div>
 
-<!-- Propose Modal (member) -->
 <div class="modal-overlay" id="modal-propose">
   <div class="modal">
     <h3>💡 Proposer un livre</h3>
-    <p style="color:var(--text2);font-size:13px">Ta proposition sera soumise à l'admin pour validation.</p>
-    <div class="form-group">
-      <label class="form-label">Titre *</label>
-      <input type="text" id="propose-title" placeholder="Titre du livre">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Auteur</label>
-      <input type="text" id="propose-author" placeholder="Auteur">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Pourquoi ce livre ?</label>
-      <textarea id="propose-reason" placeholder="Raison de ta proposition..."></textarea>
-    </div>
+    <p style="color:var(--text2);font-size:13px">Ta proposition sera soumise à l'admin.</p>
+    <div class="form-group"><label class="form-label">Titre *</label><input type="text" id="propose-title" placeholder="Titre du livre"></div>
+    <div class="form-group"><label class="form-label">Auteur</label><input type="text" id="propose-author" placeholder="Auteur"></div>
+    <div class="form-group"><label class="form-label">Pourquoi ce livre ?</label><textarea id="propose-reason" placeholder="Raison..."></textarea></div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('modal-propose')">Annuler</button>
-      <button class="btn btn-gold" onclick="submitProposal()">Envoyer la proposition</button>
+      <button class="btn btn-ghost" id="btn-propose-cancel">Annuler</button>
+      <button class="btn btn-gold" id="btn-propose-ok">Envoyer</button>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
 
-<!-- ══ FIREBASE + APP LOGIC ══ -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import {
   getFirestore, collection, doc, getDoc, getDocs, setDoc,
-  updateDoc, addDoc, onSnapshot, serverTimestamp, query, where, orderBy
+  updateDoc, addDoc, deleteDoc, onSnapshot, serverTimestamp, query, where, orderBy
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-// ── Firebase Config ── (même projet que CheckDay: xassidasvalids)
 const firebaseConfig = {
   apiKey: "AIzaSyCPMnfRCOV-Gn5WyCnr70fqy7LYkI6xDro",
   authDomain: "xassidasvalids.firebaseapp.com",
@@ -869,704 +357,552 @@ const firebaseConfig = {
   appId: "1:921554278130:web:38951124868766f48a626b"
 };
 
-const app = initializeApp(firebaseConfig, 'booktrack');
-const db = getFirestore(app);
+const fbApp = initializeApp(firebaseConfig, 'booktrack');
+const db = getFirestore(fbApp);
 
-// ── Collections ──
-const COL_MEMBERS = 'bt_members';
-const COL_BOOKS   = 'bt_books';
-const COL_PARTS   = 'bt_parts';       // subcollection under book
-const COL_RESERVATIONS = 'bt_reservations';
-const COL_PROPOSALS = 'bt_proposals';
+const C_MEMBERS = 'bt_members';
+const C_BOOKS   = 'bt_books';
+const C_RES     = 'bt_reservations';
+const C_PROP    = 'bt_proposals';
 
-// ── State ──
-let currentUser = null;
-let isAdmin = false;
+let currentUser    = null;
+let isAdmin        = false;
 let currentDateStr = todayStr();
-let booksUnsubscribe = null;
-let partBuilderCount = 0;
-let reserveContext = null;
-let confirmContext = null;
+let unsub          = null;
+let renderToken    = 0;
+let reserveCtx     = null;
+let confirmCtx     = null;
+let partFields     = [];
+let pdfPages       = 0;
+let pdfLib         = null;
 
-// ── Utilities ──
-function todayStr() {
-  return new Date().toISOString().slice(0,10);
+// ── UTILS ──
+function todayStr() { return new Date().toISOString().slice(0,10); }
+function dateFR(str) {
+  const d = new Date(str+'T12:00:00');
+  const s = d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  return s[0].toUpperCase()+s.slice(1);
 }
-function formatDateFR(str) {
-  const d = new Date(str + 'T12:00:00');
-  const opts = { weekday:'long', day:'numeric', month:'long', year:'numeric' };
-  const s = d.toLocaleDateString('fr-FR', opts);
-  return s.charAt(0).toUpperCase() + s.slice(1);
+function initials(n) { return n.split(' ').map(p=>p[0]).join('').toUpperCase().slice(0,2); }
+function toast(msg,type='') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='show '+type;
+  setTimeout(()=>t.className='',3000);
 }
-function initials(name) {
-  return name.split(' ').map(p=>p[0]).join('').toUpperCase().slice(0,2);
-}
-function toast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'show ' + type;
-  setTimeout(()=>{ t.className=''; }, 3000);
-}
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function openModal(id) { document.getElementById(id).classList.add('open'); }
 
 // ── INIT ──
 async function init() {
-  // Auto-login if session saved
   const saved = localStorage.getItem('bt_user');
   if (saved) {
     document.getElementById('splash').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
+    document.getElementById('app').style.display    = 'flex';
     await loginWith(saved);
     return;
   }
-  // Load members for splash
-  const snap = await getDocs(collection(db, COL_MEMBERS));
-  const chips = document.getElementById('member-chips');
-  const enter = document.getElementById('pseudo-input');
-  enter.addEventListener('keydown', e => { if(e.key==='Enter') loginWith(enter.value); });
-  if (snap.empty) {
-    chips.innerHTML = '<p style="color:var(--text3);font-size:12px;width:100%">Aucun membre enregistré. Saisis ton pseudo ci-dessous.</p>';
-  } else {
-    snap.forEach(d => {
-      const btn = document.createElement('div');
-      btn.className = 'member-chip';
-      btn.textContent = d.data().name;
-      btn.onclick = () => loginWith(d.data().name);
-      chips.appendChild(btn);
-    });
-  }
+  try {
+    const snap = await getDocs(collection(db, C_MEMBERS));
+    const chips = document.getElementById('member-chips');
+    chips.innerHTML = '';
+    if (snap.empty) {
+      chips.innerHTML = '<p style="color:var(--text3);font-size:12px;width:100%">Aucun membre. Saisis ton pseudo.</p>';
+    } else {
+      snap.forEach(d => {
+        const el = document.createElement('div');
+        el.className = 'member-chip';
+        el.textContent = d.data().name;
+        el.addEventListener('click', () => loginWith(d.data().name));
+        chips.appendChild(el);
+      });
+    }
+  } catch(e) { toast('Erreur Firebase : '+e.message, 'error'); console.error(e); }
 }
 
 // ── LOGIN ──
 async function loginWith(name) {
-  name = name.trim();
-  if (!name) { toast('Saisis un pseudo', 'error'); return; }
+  name = (name||'').trim();
+  if (!name) { toast('Saisis un pseudo','error'); return; }
+  try {
+    const id  = name.toLowerCase().replace(/\s+/g,'_');
+    const ref = doc(db, C_MEMBERS, id);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {name, isAdmin:false, joinedAt:serverTimestamp(), readCount:0});
+    }
+    const data = snap.exists() ? snap.data() : {name, isAdmin:false};
+    currentUser = {id, name: data.name||name};
+    isAdmin     = data.isAdmin||false;
+    localStorage.setItem('bt_user', currentUser.name);
 
-  const id = name.toLowerCase().replace(/\s+/g,'_');
-  const ref = doc(db, COL_MEMBERS, id);
-  const snap = await getDoc(ref);
+    document.getElementById('user-name-badge').textContent   = currentUser.name;
+    document.getElementById('user-avatar').textContent       = initials(currentUser.name);
+    document.getElementById('admin-badge-top').style.display = isAdmin ? 'inline' : 'none';
+    document.getElementById('tab-admin').style.display       = isAdmin ? 'block'  : 'none';
+    document.getElementById('splash').style.display          = 'none';
+    document.getElementById('app').style.display             = 'flex';
+    document.getElementById('topbar-date').textContent       = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
 
-  if (!snap.exists()) {
-    await setDoc(ref, { name, isAdmin: false, joinedAt: serverTimestamp(), readCount: 0 });
-  }
-
-  const data = snap.exists() ? snap.data() : { name, isAdmin: false };
-  currentUser = { id, name: data.name || name };
-  isAdmin = data.isAdmin || false;
-  localStorage.setItem('bt_user', currentUser.name);
-
-  document.getElementById('user-name-badge').textContent = currentUser.name;
-  document.getElementById('user-avatar').textContent = initials(currentUser.name);
-  document.getElementById('admin-badge-top').style.display = isAdmin ? 'inline' : 'none';
-  document.getElementById('admin-tab').style.display = isAdmin ? 'block' : 'none';
-
-  document.getElementById('splash').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-
-  updateDateDisplay();
-  loadBooks();
-  loadMembers();
-  startCountdown();
-
-  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
+    updateDateDisplay();
+    loadBooks();
+    loadMembers();
+    startCountdown();
+  } catch(e) { toast('Erreur : '+e.message,'error'); console.error(e); }
 }
 
 function logout() {
-  if (booksUnsubscribe) booksUnsubscribe();
-  currentUser = null;
-  isAdmin = false;
+  if (unsub) unsub();
+  currentUser = null; isAdmin = false;
   localStorage.removeItem('bt_user');
-  document.getElementById('app').style.display = 'none';
+  document.getElementById('app').style.display    = 'none';
   document.getElementById('splash').style.display = 'flex';
+  // Reset to today tab
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-today').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-today').classList.add('active');
   document.getElementById('member-chips').innerHTML = '';
   init();
 }
 
 // ── TABS ──
-function switchTab(tab) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-'+tab).classList.add('active');
-  event.target.classList.add('active');
-  if (tab === 'admin') { loadProposals(); loadAdminBooks(); }
-  if (tab === 'members') loadMembers();
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name==='admin')   { loadProposals(); loadAdminBooks(); }
+  if (name==='members') { loadMembers(); }
 }
 
-// ── DATE NAV ──
-function changeDay(delta) {
-  const d = new Date(currentDateStr + 'T12:00:00');
-  d.setDate(d.getDate() + delta);
-  currentDateStr = d.toISOString().slice(0,10);
-  updateDateDisplay();
-  loadBooks();
+// ── DATE ──
+function changeDay(d) {
+  const dt = new Date(currentDateStr+'T12:00:00');
+  dt.setDate(dt.getDate()+d);
+  currentDateStr = dt.toISOString().slice(0,10);
+  updateDateDisplay(); loadBooks();
 }
 function updateDateDisplay() {
   const el = document.getElementById('date-display');
-  const label = currentDateStr === todayStr() ? "Aujourd'hui — " + formatDateFR(currentDateStr) : formatDateFR(currentDateStr);
-  el.textContent = label;
-  el.className = 'date-display' + (currentDateStr === todayStr() ? ' today' : '');
+  const isToday = currentDateStr===todayStr();
+  el.textContent = isToday ? "Aujourd'hui — "+dateFR(currentDateStr) : dateFR(currentDateStr);
+  el.className   = 'date-display'+(isToday?' today':'');
   document.getElementById('admin-book-date').value = currentDateStr;
 }
 
 // ── COUNTDOWN ──
 function startCountdown() {
-  setInterval(() => {
-    const now = new Date();
-    const end = new Date();
+  setInterval(()=>{
+    const now=new Date(), end=new Date();
     end.setHours(23,59,59,0);
-    const diff = end - now;
-    if (diff < 0) { document.getElementById('countdown-display').textContent = 'Terminé'; return; }
-    const h = Math.floor(diff/3600000);
-    const m = Math.floor((diff%3600000)/60000);
-    const s = Math.floor((diff%60000)/1000);
-    const str = `${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
-    document.getElementById('countdown-display').textContent = str;
-    const bar = document.getElementById('deadline-bar');
-    bar.classList.toggle('urgent', h < 2);
-  }, 1000);
+    const diff=end-now;
+    if (diff<0) { document.getElementById('countdown-display').textContent='Terminé'; return; }
+    const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+    document.getElementById('countdown-display').textContent=`${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+    document.getElementById('deadline-bar').classList.toggle('urgent',h<2);
+  },1000);
 }
 
 // ── LOAD BOOKS ──
-let renderToken = 0;
 function loadBooks() {
-  if (booksUnsubscribe) booksUnsubscribe();
+  if (unsub) unsub();
   renderToken++;
-  const myToken = renderToken;
-  const grid = document.getElementById('books-grid');
+  const myTok = renderToken;
+  const grid  = document.getElementById('books-grid');
   grid.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>Chargement...</p></div>';
 
-  const q = query(collection(db, COL_BOOKS), where('date','==',currentDateStr));
-  booksUnsubscribe = onSnapshot(q, async (snap) => {
-    if (myToken !== renderToken) return;
+  const q = query(collection(db,C_BOOKS), where('date','==',currentDateStr));
+  unsub = onSnapshot(q, async snap => {
+    if (myTok!==renderToken) return;
 
-    // Mémoriser les cartes ouvertes avant re-rendu
     const openCards = new Set();
-    document.querySelectorAll('.parts-container.open').forEach(el => {
-      openCards.add(el.id.replace('parts-', ''));
+    document.querySelectorAll('.parts-container.open').forEach(el=>{
+      openCards.add(el.id.replace('parts-',''));
     });
 
     if (snap.empty) {
-      grid.innerHTML = '<div class="empty-state"><div class="icon">📚</div><p>Aucun livre programmé pour ce jour.</p>' + (isAdmin ? '<button class="btn btn-gold btn-sm" onclick="switchTab('admin')">+ Ajouter via Admin</button>' : '') + '</div>';
+      grid.innerHTML='<div class="empty-state"><div class="icon">📚</div><p>Aucun livre programmé.</p></div>';
       return;
     }
-    const books = [];
-    for (const bookDoc of snap.docs) {
-      const book = { id: bookDoc.id, ...bookDoc.data() };
-      const partsSnap = await getDocs(collection(db, COL_BOOKS, book.id, 'parts'));
-      const partsArr = partsSnap.docs.map(p => ({ id: p.id, ...p.data() }));
-      partsArr.sort((a,b) => (a.order||0)-(b.order||0));
-      const resSnap = await getDocs(query(collection(db, COL_RESERVATIONS), where('bookId','==',book.id)));
-      const reservations = {};
-      resSnap.forEach(r => {
-        const d = r.data();
-        if (!reservations[d.partId]) reservations[d.partId] = [];
-        reservations[d.partId].push({ id: r.id, ...d });
-      });
-      books.push({ book, partsArr, reservations });
+
+    const books=[];
+    for (const bDoc of snap.docs) {
+      const book={id:bDoc.id,...bDoc.data()};
+      const partsSnap=await getDocs(collection(db,C_BOOKS,book.id,'parts'));
+      const partsArr=partsSnap.docs.map(p=>({id:p.id,...p.data()}));
+      partsArr.sort((a,b)=>(a.order||0)-(b.order||0));
+      const resSnap=await getDocs(query(collection(db,C_RES),where('bookId','==',book.id)));
+      const res={};
+      resSnap.forEach(r=>{ const d=r.data(); if(!res[d.partId])res[d.partId]=[]; res[d.partId].push({id:r.id,...d}); });
+      books.push({book,partsArr,res});
     }
-    if (myToken !== renderToken) return;
-    grid.innerHTML = '';
-    books.forEach(({ book, partsArr, reservations }) => {
-      const card = renderBookCard(book, partsArr, reservations);
+
+    if (myTok!==renderToken) return;
+    grid.innerHTML='';
+    books.forEach(({book,partsArr,res})=>{
+      const card=renderCard(book,partsArr,res);
       grid.appendChild(card);
-      // Rouvrir les cartes qui étaient ouvertes avant
       if (openCards.has(book.id)) {
-        const container = card.querySelector('#parts-' + book.id);
-        const chevron = card.querySelector('#chevron-' + book.id);
-        if (container) container.classList.add('open');
-        if (chevron) chevron.classList.add('open');
+        card.querySelector('#parts-'+book.id)?.classList.add('open');
+        card.querySelector('#chev-'+book.id)?.classList.add('open');
       }
     });
-  }, (err) => {
-    grid.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Erreur : ' + err.message + '</p></div>';
+  }, err=>{
+    grid.innerHTML='<div class="empty-state"><div class="icon">⚠️</div><p>Erreur : '+err.message+'</p></div>';
     console.error(err);
   });
 }
 
-// ── RENDER BOOK CARD ──
-function renderBookCard(book, parts, reservations) {
+// ── RENDER CARD ──
+function renderCard(book, parts, reservations) {
   const card = document.createElement('div');
   card.className = 'book-card';
 
-  // Count stats
-  let totalParts = parts.length;
-  let confirmedParts = 0;
-  let takenParts = 0;
-  parts.forEach(p => {
-    const res = reservations[p.id] || [];
-    const myRes = res.find(r => r.userId === currentUser.id);
-    if (myRes?.confirmed) confirmedParts++;
-    else if (res.length > 0) takenParts++;
+  let confirmed=0, taken=0;
+  parts.forEach(p=>{
+    const r=reservations[p.id]||[];
+    const my=r.find(x=>x.userId===currentUser.id);
+    if (my?.confirmed) confirmed++;
+    else if (r.length>0) taken++;
   });
-  const progress = totalParts > 0 ? Math.round((confirmedParts/totalParts)*100) : 0;
+  const pct = parts.length>0 ? Math.round(confirmed/parts.length*100) : 0;
 
-  card.innerHTML = `
-    <div class="book-header" onclick="toggleBook('${book.id}')">
-      <div class="book-cover">${book.icon||'📖'}</div>
-      <div class="book-info">
-        <div class="book-title">${book.title}</div>
-        <div class="book-author">${book.author||''} ${book.isProposal?'<span class="tag tag-proposal">Proposition</span>':''}</div>
-        <div class="book-progress-bar"><div class="book-progress-fill" style="width:${progress}%"></div></div>
-        <div class="book-stats">
-          <span>${confirmedParts}/${totalParts} parties confirmées</span>
-          <span>·</span>
-          <span>${takenParts} réservée${takenParts>1?'s':''}</span>
-        </div>
-      </div>
-      <div class="book-chevron" id="chevron-${book.id}">▼</div>
+  const header = document.createElement('div');
+  header.className = 'book-header';
+  header.innerHTML = `
+    <div class="book-cover">${book.icon||'📖'}</div>
+    <div class="book-info">
+      <div class="book-title">${book.title}</div>
+      <div class="book-author">${book.author||''} ${book.isProposal?'<span class="tag tag-proposal">Proposition</span>':''}</div>
+      <div class="book-progress-bar"><div class="book-progress-fill" style="width:${pct}%"></div></div>
+      <div class="book-stats"><span>${confirmed}/${parts.length} confirmées</span><span>·</span><span>${taken} réservée${taken>1?'s':''}</span></div>
     </div>
-    <div class="parts-container" id="parts-${book.id}">
-      <div class="parts-list" id="parts-list-${book.id}"></div>
-      ${isAdmin ? `<div style="padding:10px 20px;border-top:1px solid var(--border)"><button class="btn btn-ghost btn-sm" onclick="deleteBook('${book.id}')">🗑 Supprimer le livre</button></div>` : ''}
-    </div>
+    <div class="book-chevron" id="chev-${book.id}">▼</div>
   `;
 
-  // Populate parts list
-  const partsList = card.querySelector(`#parts-list-${book.id}`);
-  if (parts.length === 0) {
-    partsList.innerHTML = '<div style="padding:16px 20px;color:var(--text3);font-size:13px">Aucune partie définie.</div>';
-  } else {
-    parts.forEach(part => {
-      const res = reservations[part.id] || [];
-      const myRes = res.find(r => r.userId === currentUser.id);
-      const isConfirmed = myRes?.confirmed || false;
-      const isTaken = res.length > 0;
-      const isFull = part.maxReaders > 0 && res.length >= part.maxReaders;
+  const partsContainer = document.createElement('div');
+  partsContainer.className = 'parts-container';
+  partsContainer.id = 'parts-'+book.id;
 
-      const dotClass = isConfirmed ? 'confirmed' : (isFull ? 'full' : (isTaken ? 'taken' : 'free'));
+  header.addEventListener('click', ()=>{
+    partsContainer.classList.toggle('open');
+    document.getElementById('chev-'+book.id).classList.toggle('open');
+  });
+
+  // Parts rows
+  if (parts.length===0) {
+    partsContainer.innerHTML='<div style="padding:16px 20px;color:var(--text3);font-size:13px">Aucune partie définie.</div>';
+  } else {
+    parts.forEach(part=>{
+      const r = reservations[part.id]||[];
+      const my = r.find(x=>x.userId===currentUser.id);
+      const isFull = part.maxReaders>0 && r.length>=part.maxReaders;
+      const dotClass = my?.confirmed?'confirmed':(isFull?'full':(r.length>0?'taken':'free'));
 
       const row = document.createElement('div');
       row.className = 'part-row';
 
-      // Assignees chips
-      const chipsHTML = res.map(r => `
-        <div class="assignee-chip ${r.userId===currentUser.id?'me':''} ${r.confirmed?'confirmed':''}">
-          ${r.userName}
-          ${r.confirmed ? '<span class="check-icon">✓</span>' : ''}
-        </div>
-      `).join('');
-
-      // Actions
-      let actionHTML = '';
-      if (myRes) {
-        if (!myRes.confirmed) {
-          actionHTML = `
-            <button class="btn btn-green btn-sm" onclick="openConfirmModal('${book.id}','${part.id}','${part.label||'Partie'}','${myRes.id}')">✓ Confirmer</button>
-            <button class="btn btn-red btn-sm" onclick="cancelReservation('${myRes.id}')">✕</button>
-          `;
-        } else {
-          actionHTML = '<span style="color:var(--green);font-size:12px">✓ Lu</span>';
-        }
-      } else if (!isFull || isAdmin) {
-        actionHTML = `<button class="btn btn-blue btn-sm" onclick="openReserveModal('${book.id}','${book.title}','${part.id}','${part.label||'Partie'}')">Réserver</button>`;
-      }
+      const chips = r.map(x=>`<div class="assignee-chip ${x.userId===currentUser.id?'me':''} ${x.confirmed?'confirmed':''}">${x.userName}${x.confirmed?' ✓':''}</div>`).join('');
 
       row.innerHTML = `
         <div class="status-dot ${dotClass}"></div>
-        <div class="part-label">${part.label||('Partie '+(part.order+1))}</div>
+        <div class="part-label">${part.label||'Partie '+(part.order+1)}</div>
         <div class="part-desc">${part.description||''}</div>
-        <div class="part-assignee"><div class="assignee-chips">${chipsHTML}</div></div>
-        <div class="part-status">${actionHTML}</div>
+        <div class="part-assignee"><div class="assignee-chips">${chips}</div></div>
+        <div class="part-status" id="act-${part.id}"></div>
       `;
-      partsList.appendChild(row);
+
+      const actDiv = row.querySelector('#act-'+part.id);
+      if (my) {
+        if (!my.confirmed) {
+          const bc=document.createElement('button'); bc.className='btn btn-green btn-sm'; bc.textContent='✓ Confirmer';
+          bc.addEventListener('click',()=>openConfirmModal(part.label||'Partie',my.id));
+          const bx=document.createElement('button'); bx.className='btn btn-red btn-sm'; bx.textContent='✕';
+          bx.addEventListener('click',()=>cancelRes(my.id));
+          actDiv.appendChild(bc); actDiv.appendChild(bx);
+        } else {
+          actDiv.innerHTML='<span style="color:var(--green);font-size:12px">✓ Lu</span>';
+        }
+      } else if (!isFull||isAdmin) {
+        const br=document.createElement('button'); br.className='btn btn-blue btn-sm'; br.textContent='Réserver';
+        br.addEventListener('click',()=>openReserveModal(book.id,book.title,part.id,part.label||'Partie'));
+        actDiv.appendChild(br);
+      }
+
+      partsContainer.appendChild(row);
     });
   }
 
+  // Admin delete button
+  if (isAdmin) {
+    const footer=document.createElement('div');
+    footer.style.cssText='padding:10px 20px;border-top:1px solid var(--border)';
+    const bd=document.createElement('button'); bd.className='btn btn-ghost btn-sm'; bd.textContent='🗑 Supprimer le livre';
+    bd.addEventListener('click',()=>deleteBook(book.id));
+    footer.appendChild(bd);
+    partsContainer.appendChild(footer);
+  }
+
+  card.appendChild(header);
+  card.appendChild(partsContainer);
   return card;
 }
 
-function toggleBook(id) {
-  const container = document.getElementById('parts-'+id);
-  const chevron = document.getElementById('chevron-'+id);
-  const isOpen = container.classList.contains('open');
-  container.classList.toggle('open', !isOpen);
-  chevron.classList.toggle('open', !isOpen);
-}
-
 // ── RESERVE ──
-function openReserveModal(bookId, bookTitle, partId, partLabel) {
-  reserveContext = { bookId, bookTitle, partId, partLabel };
-  document.getElementById('reserve-info').textContent = `Livre : "${bookTitle}" — ${partLabel}`;
-  document.getElementById('reserve-part-select').innerHTML = `<option value="${partId}">${partLabel}</option>`;
-  document.getElementById('reserve-note').value = '';
+function openReserveModal(bookId,bookTitle,partId,partLabel) {
+  reserveCtx={bookId,partId};
+  document.getElementById('reserve-info').textContent=`"${bookTitle}" — ${partLabel}`;
+  document.getElementById('reserve-note').value='';
   openModal('modal-reserve');
 }
-
-async function confirmReserve() {
-  if (!reserveContext) return;
-  const note = document.getElementById('reserve-note').value.trim();
+async function doReserve() {
+  if (!reserveCtx) return;
   try {
-    await addDoc(collection(db, COL_RESERVATIONS), {
-      bookId: reserveContext.bookId,
-      partId: reserveContext.partId,
-      userId: currentUser.id,
-      userName: currentUser.name,
-      note,
-      confirmed: false,
-      date: currentDateStr,
-      createdAt: serverTimestamp()
+    await addDoc(collection(db,C_RES),{
+      bookId:reserveCtx.bookId, partId:reserveCtx.partId,
+      userId:currentUser.id, userName:currentUser.name,
+      note:document.getElementById('reserve-note').value.trim(),
+      confirmed:false, date:currentDateStr, createdAt:serverTimestamp()
     });
     closeModal('modal-reserve');
-    toast('Partie réservée ! 📌', 'success');
-    loadBooks();
-  } catch(e) {
-    toast('Erreur : ' + e.message, 'error');
-  }
+    toast('Partie réservée ! 📌','success');
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
 
-// ── CONFIRM READING ──
-function openConfirmModal(bookId, partId, partLabel, resId) {
-  confirmContext = { bookId, partId, partLabel, resId };
-  document.getElementById('confirm-info').textContent = `Confirmer la lecture de : ${partLabel}`;
-  document.getElementById('confirm-comment').value = '';
+// ── CONFIRM ──
+function openConfirmModal(partLabel,resId) {
+  confirmCtx={resId};
+  document.getElementById('confirm-info').textContent='Confirmer : '+partLabel;
+  document.getElementById('confirm-comment').value='';
   openModal('modal-confirm');
 }
-
-async function submitConfirm() {
-  if (!confirmContext) return;
+async function doConfirm() {
+  if (!confirmCtx) return;
   try {
-    await updateDoc(doc(db, COL_RESERVATIONS, confirmContext.resId), {
-      confirmed: true,
-      confirmedAt: serverTimestamp(),
-      comment: document.getElementById('confirm-comment').value.trim()
+    await updateDoc(doc(db,C_RES,confirmCtx.resId),{
+      confirmed:true, confirmedAt:serverTimestamp(),
+      comment:document.getElementById('confirm-comment').value.trim()
     });
     closeModal('modal-confirm');
-    toast('Lecture confirmée ! ✅', 'success');
-    loadBooks();
-  } catch(e) { toast('Erreur : '+e.message, 'error'); }
-}
-
-// ── CANCEL RESERVATION ──
-async function cancelReservation(resId) {
-  if (!confirm('Annuler cette réservation ?')) return;
-  try {
-    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    await deleteDoc(doc(db, COL_RESERVATIONS, resId));
-    toast('Réservation annulée', '');
-    loadBooks();
+    toast('Lecture confirmée ! ✅','success');
   } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
-
-// ── PROPOSE (member) ──
-function openProposeModal() {
-  document.getElementById('propose-title').value = '';
-  document.getElementById('propose-author').value = '';
-  document.getElementById('propose-reason').value = '';
-  openModal('modal-propose');
+async function cancelRes(resId) {
+  if (!confirm('Annuler cette réservation ?')) return;
+  try { await deleteDoc(doc(db,C_RES,resId)); toast('Réservation annulée',''); }
+  catch(e) { toast('Erreur : '+e.message,'error'); }
 }
-async function submitProposal() {
-  const title = document.getElementById('propose-title').value.trim();
-  if (!title) { toast('Titre requis', 'error'); return; }
+
+// ── PROPOSE ──
+async function doPropose() {
+  const title=document.getElementById('propose-title').value.trim();
+  if (!title) { toast('Titre requis','error'); return; }
   try {
-    await addDoc(collection(db, COL_PROPOSALS), {
-      title,
-      author: document.getElementById('propose-author').value.trim(),
-      reason: document.getElementById('propose-reason').value.trim(),
-      proposedBy: currentUser.name,
-      proposedById: currentUser.id,
-      date: currentDateStr,
-      status: 'pending',
-      createdAt: serverTimestamp()
+    await addDoc(collection(db,C_PROP),{
+      title, author:document.getElementById('propose-author').value.trim(),
+      reason:document.getElementById('propose-reason').value.trim(),
+      proposedBy:currentUser.name, proposedById:currentUser.id,
+      date:currentDateStr, status:'pending', createdAt:serverTimestamp()
     });
     closeModal('modal-propose');
-    toast('Proposition envoyée à l\'admin ! 💡', 'success');
+    toast('Proposition envoyée ! 💡','success');
   } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
 
-// ── PDF HANDLING ──
-let pdfPageCount = 0;
-let pdfFileName = '';
-let pdfjsLib = null;
-
-async function loadPdfJs() {
-  if (pdfjsLib) return pdfjsLib;
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-    script.onload = () => {
-      pdfjsLib = window['pdfjs-dist/build/pdf'];
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      resolve(pdfjsLib);
-    };
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-}
-
-window.handlePdfUpload = async function(file) {
-  if (!file || file.type !== 'application/pdf') { toast('Fichier PDF requis', 'error'); return; }
-  pdfFileName = file.name;
-  toast('Chargement de PDF.js...', '');
-
-  try {
-    const lib = await loadPdfJs();
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await lib.getDocument({ data: arrayBuffer }).promise;
-    pdfPageCount = pdf.numPages;
-
-    document.getElementById('pdf-page-count').textContent = pdfPageCount;
-    document.getElementById('pdf-filename').textContent = '📄 ' + pdfFileName;
-    document.getElementById('pdf-info').classList.add('show');
-    document.getElementById('pdf-drop-zone').style.display = 'none';
-    updatePdfSplit();
-    toast(pdfPageCount + ' pages détectées !', 'success');
-  } catch(e) {
-    toast('Erreur lecture PDF : ' + e.message, 'error');
-    console.error(e);
-  }
-};
-
-window.updatePdfSplit = function() {
-  if (!pdfPageCount) return;
-  const n = parseInt(document.getElementById('pdf-parts-count').value) || 1;
-  const pagesPerPart = Math.floor(pdfPageCount / n);
-  const remainder = pdfPageCount % n;
-  const preview = document.getElementById('pdf-split-preview');
-  preview.innerHTML = '';
-  for (let i = 0; i < n; i++) {
-    const start = i * pagesPerPart + 1 + (i < remainder ? i : remainder);
-    const extra = i < remainder ? 1 : 0;
-    const end = start + pagesPerPart - 1 + extra;
-    const chip = document.createElement('div');
-    chip.className = 'pdf-split-chip active';
-    chip.textContent = 'Partie ' + (i+1) + ' : p.' + start + '–' + end;
-    preview.appendChild(chip);
-  }
-};
-
-window.applyPdfSplit = function() {
-  if (!pdfPageCount) return;
-  const n = parseInt(document.getElementById('pdf-parts-count').value) || 1;
-  const pagesPerPart = Math.floor(pdfPageCount / n);
-  const remainder = pdfPageCount % n;
-
-  adminPartFields = [];
-  for (let i = 0; i < n; i++) {
-    const start = i * pagesPerPart + 1 + (i < remainder ? i : remainder);
-    const extra = i < remainder ? 1 : 0;
-    const end = start + pagesPerPart - 1 + extra;
-    adminPartFields.push({
-      label: 'Partie ' + (i+1),
-      description: 'Pages ' + start + ' à ' + end + ' (' + (end - start + 1) + ' pages)'
-    });
-  }
-  renderPartFields();
-  toast(n + ' parties générées automatiquement !', 'success');
-};
-
-window.clearPdf = function() {
-  pdfPageCount = 0;
-  pdfFileName = '';
-  document.getElementById('pdf-info').classList.remove('show');
-  document.getElementById('pdf-drop-zone').style.display = 'block';
-  document.getElementById('pdf-file-input').value = '';
-  document.getElementById('pdf-split-preview').innerHTML = '';
-};
-
-// Drag & drop support
-document.addEventListener('DOMContentLoaded', () => {
-  const zone = document.getElementById('pdf-drop-zone');
-  if (!zone) return;
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('drag-over');
-    const file = e.dataTransfer.files[0];
-    if (file) handlePdfUpload(file);
-  });
-});
-
-// ── ADMIN: ADD BOOK ──
-let adminPartFields = [];
-function addPartField() {
-  const idx = adminPartFields.length;
-  adminPartFields.push({ label: '', description: '' });
-  renderPartFields();
-}
+// ── ADMIN BOOKS ──
 function renderPartFields() {
-  const container = document.getElementById('admin-parts-builder');
-  container.innerHTML = '';
-  adminPartFields.forEach((p, i) => {
-    const row = document.createElement('div');
-    row.className = 'part-builder-row';
-    row.innerHTML = `
-      <span>Partie ${i+1}</span>
-      <input type="text" placeholder="Label (ex: Partie A)" value="${p.label}" oninput="adminPartFields[${i}].label=this.value" style="flex:1">
-      <input type="text" placeholder="Description (optionnel)" value="${p.description}" oninput="adminPartFields[${i}].description=this.value" style="flex:2">
-      <button class="remove-btn" onclick="removePartField(${i})">✕</button>
-    `;
-    container.appendChild(row);
+  const c=document.getElementById('admin-parts-builder'); c.innerHTML='';
+  partFields.forEach((p,i)=>{
+    const row=document.createElement('div'); row.className='part-builder-row';
+    row.innerHTML=`<span>P${i+1}</span>
+      <input type="text" placeholder="Label" value="${p.label}" style="flex:1">
+      <input type="text" placeholder="Description" value="${p.description}" style="flex:2">
+      <button class="remove-btn">✕</button>`;
+    row.querySelectorAll('input')[0].addEventListener('input',e=>{partFields[i].label=e.target.value;});
+    row.querySelectorAll('input')[1].addEventListener('input',e=>{partFields[i].description=e.target.value;});
+    row.querySelector('.remove-btn').addEventListener('click',()=>{partFields.splice(i,1);renderPartFields();});
+    c.appendChild(row);
   });
-}
-function removePartField(i) {
-  adminPartFields.splice(i,1);
-  renderPartFields();
 }
 
 async function adminAddBook() {
-  if (!isAdmin) return;
-  const title = document.getElementById('admin-book-title').value.trim();
-  const author = document.getElementById('admin-book-author').value.trim();
-  const date = document.getElementById('admin-book-date').value.trim();
-  const icon = document.getElementById('admin-book-icon').value.trim() || '📖';
-
-  if (!title || !date) { toast('Titre et date requis', 'error'); return; }
-
+  const title=document.getElementById('admin-book-title').value.trim();
+  const date=document.getElementById('admin-book-date').value.trim();
+  if (!title||!date) { toast('Titre et date requis','error'); return; }
   try {
-    const bookRef = await addDoc(collection(db, COL_BOOKS), {
-      title, author, date, icon,
-      isProposal: false,
-      createdBy: currentUser.id,
-      createdAt: serverTimestamp()
+    const ref=await addDoc(collection(db,C_BOOKS),{
+      title, author:document.getElementById('admin-book-author').value.trim(),
+      date, icon:document.getElementById('admin-book-icon').value.trim()||'📖',
+      isProposal:false, createdBy:currentUser.id, createdAt:serverTimestamp()
     });
-    // Add parts
-    for (let i = 0; i < adminPartFields.length; i++) {
-      await addDoc(collection(db, COL_BOOKS, bookRef.id, 'parts'), {
-        label: adminPartFields[i].label || `Partie ${i+1}`,
-        description: adminPartFields[i].description || '',
-        order: i,
-        maxReaders: 1
+    for (let i=0;i<partFields.length;i++) {
+      await addDoc(collection(db,C_BOOKS,ref.id,'parts'),{
+        label:partFields[i].label||`Partie ${i+1}`,
+        description:partFields[i].description||'',
+        order:i, maxReaders:1
       });
     }
-    // Reset
-    document.getElementById('admin-book-title').value = '';
-    document.getElementById('admin-book-author').value = '';
-    document.getElementById('admin-book-icon').value = '';
-    adminPartFields = [];
-    renderPartFields();
-    toast(`"${title}" ajouté ! 📘`, 'success');
+    document.getElementById('admin-book-title').value='';
+    document.getElementById('admin-book-author').value='';
+    document.getElementById('admin-book-icon').value='';
+    partFields=[]; renderPartFields(); clearPdf();
+    toast(`"${title}" ajouté !`,'success');
     loadAdminBooks();
-    loadBooks();
   } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
 
-// ── ADMIN: LOAD BOOKS LIST ──
+async function deleteBook(id) {
+  if (!confirm('Supprimer ce livre ?')) return;
+  try { await deleteDoc(doc(db,C_BOOKS,id)); toast('Livre supprimé',''); }
+  catch(e) { toast('Erreur : '+e.message,'error'); }
+}
+
 async function loadAdminBooks() {
-  const container = document.getElementById('admin-books-list');
-  container.innerHTML = '<p style="color:var(--text3);font-size:13px">Chargement...</p>';
-  const snap = await getDocs(query(collection(db, COL_BOOKS), orderBy('date','desc')));
-  if (snap.empty) { container.innerHTML = '<p style="color:var(--text3);font-size:13px">Aucun livre.</p>'; return; }
-  container.innerHTML = '';
-  snap.forEach(d => {
-    const b = d.data();
-    const card = document.createElement('div');
-    card.className = 'proposal-card';
-    card.innerHTML = `
-      <div class="proposal-info">
-        <div class="proposal-title">${b.icon||'📖'} ${b.title} <span style="color:var(--text3)">— ${b.author||'?'}</span></div>
-        <div class="proposal-meta">📅 ${b.date}</div>
-      </div>
-      <div class="proposal-actions">
-        <button class="btn btn-red btn-sm" onclick="deleteBook('${d.id}')">🗑</button>
-      </div>
-    `;
-    container.appendChild(card);
-  });
-}
-
-// ── ADMIN: DELETE BOOK ──
-async function deleteBook(bookId) {
-  if (!confirm('Supprimer ce livre et toutes ses données ?')) return;
+  const c=document.getElementById('admin-books-list');
+  c.innerHTML='<p style="color:var(--text3);font-size:13px">Chargement...</p>';
   try {
-    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    await deleteDoc(doc(db, COL_BOOKS, bookId));
-    toast('Livre supprimé', '');
-    loadBooks();
-    loadAdminBooks();
-  } catch(e) { toast('Erreur : '+e.message,'error'); }
-}
-
-// ── ADMIN: PROPOSALS ──
-async function loadProposals() {
-  const container = document.getElementById('proposals-list');
-  const snap = await getDocs(query(collection(db, COL_PROPOSALS), where('status','==','pending')));
-  if (snap.empty) { container.innerHTML = '<p style="color:var(--text3);font-size:13px">Aucune proposition en attente.</p>'; return; }
-  container.innerHTML = '';
-  snap.forEach(d => {
-    const p = d.data();
-    const card = document.createElement('div');
-    card.className = 'proposal-card';
-    card.innerHTML = `
-      <div class="proposal-info">
-        <div class="proposal-title">📖 ${p.title} <span style="color:var(--text3)">— ${p.author||'?'}</span></div>
-        <div class="proposal-meta">💬 "${p.reason||'–'}" — par <strong>${p.proposedBy}</strong> pour le ${p.date}</div>
-      </div>
-      <div class="proposal-actions">
-        <button class="btn btn-green btn-sm" onclick="approveProposal('${d.id}')">✓ Valider</button>
-        <button class="btn btn-red btn-sm" onclick="rejectProposal('${d.id}')">✕ Refuser</button>
-      </div>
-    `;
-    container.appendChild(card);
-  });
-}
-
-async function approveProposal(id) {
-  const snap = await getDoc(doc(db, COL_PROPOSALS, id));
-  const p = snap.data();
-  try {
-    // Create book from proposal
-    const bookRef = await addDoc(collection(db, COL_BOOKS), {
-      title: p.title,
-      author: p.author || '',
-      date: p.date,
-      icon: '📖',
-      isProposal: true,
-      createdBy: p.proposedById,
-      createdAt: serverTimestamp()
+    const snap=await getDocs(query(collection(db,C_BOOKS),orderBy('date','desc')));
+    if (snap.empty) { c.innerHTML='<p style="color:var(--text3);font-size:13px">Aucun livre.</p>'; return; }
+    c.innerHTML='';
+    snap.forEach(d=>{
+      const b=d.data();
+      const card=document.createElement('div'); card.className='proposal-card';
+      card.innerHTML=`<div class="proposal-info"><div class="proposal-title">${b.icon||'📖'} ${b.title}</div><div class="proposal-meta">📅 ${b.date} — ${b.author||'?'}</div></div>`;
+      const btn=document.createElement('button'); btn.className='btn btn-red btn-sm'; btn.textContent='🗑';
+      btn.addEventListener('click',()=>deleteBook(d.id));
+      card.appendChild(btn); c.appendChild(card);
     });
-    await updateDoc(doc(db, COL_PROPOSALS, id), { status: 'approved' });
-    toast('Proposition validée ! Le livre a été ajouté.', 'success');
-    loadProposals();
-    loadBooks();
-  } catch(e) { toast('Erreur : '+e.message,'error'); }
+  } catch(e) { c.innerHTML='<p style="color:var(--text3)">Erreur : '+e.message+'</p>'; }
 }
-async function rejectProposal(id) {
-  await updateDoc(doc(db, COL_PROPOSALS, id), { status: 'rejected' });
-  toast('Proposition refusée.', '');
-  loadProposals();
+
+async function loadProposals() {
+  const c=document.getElementById('proposals-list');
+  try {
+    const snap=await getDocs(query(collection(db,C_PROP),where('status','==','pending')));
+    if (snap.empty) { c.innerHTML='<p style="color:var(--text3);font-size:13px">Aucune proposition.</p>'; return; }
+    c.innerHTML='';
+    snap.forEach(d=>{
+      const p=d.data();
+      const card=document.createElement('div'); card.className='proposal-card';
+      card.innerHTML=`<div class="proposal-info"><div class="proposal-title">📖 ${p.title}</div><div class="proposal-meta">"${p.reason||'–'}" — ${p.proposedBy} · ${p.date}</div></div>`;
+      const ok=document.createElement('button'); ok.className='btn btn-green btn-sm'; ok.textContent='✓ Valider';
+      ok.addEventListener('click',async()=>{
+        await addDoc(collection(db,C_BOOKS),{title:p.title,author:p.author||'',date:p.date,icon:'📖',isProposal:true,createdBy:p.proposedById,createdAt:serverTimestamp()});
+        await updateDoc(doc(db,C_PROP,d.id),{status:'approved'});
+        toast('Validée !','success'); loadProposals();
+      });
+      const no=document.createElement('button'); no.className='btn btn-red btn-sm'; no.textContent='✕';
+      no.addEventListener('click',async()=>{ await updateDoc(doc(db,C_PROP,d.id),{status:'rejected'}); toast('Refusée',''); loadProposals(); });
+      const acts=document.createElement('div'); acts.style.display='flex'; acts.style.gap='8px';
+      acts.appendChild(ok); acts.appendChild(no); card.appendChild(acts); c.appendChild(card);
+    });
+  } catch(e) { c.innerHTML='<p style="color:var(--text3)">Erreur : '+e.message+'</p>'; }
 }
 
 // ── MEMBERS ──
 async function loadMembers() {
-  const grid = document.getElementById('members-grid');
-  grid.innerHTML = '';
-  const snap = await getDocs(collection(db, COL_MEMBERS));
-  document.getElementById('members-count').textContent = snap.size + ' membre' + (snap.size>1?'s':'');
-  snap.forEach(d => {
-    const m = d.data();
-    const card = document.createElement('div');
-    card.className = 'member-card' + (m.isAdmin?' admin-card':'');
-    card.innerHTML = `
-      <div class="member-card-avatar">${initials(m.name)}</div>
-      <div class="member-card-name">${m.name} ${m.isAdmin?'<span class="admin-badge">Admin</span>':''}</div>
-      <div class="member-card-stats">Membre actif</div>
-    `;
-    grid.appendChild(card);
+  const g=document.getElementById('members-grid'); g.innerHTML='';
+  const snap=await getDocs(collection(db,C_MEMBERS));
+  document.getElementById('members-count').textContent=snap.size+' membre'+(snap.size>1?'s':'');
+  snap.forEach(d=>{
+    const m=d.data();
+    const card=document.createElement('div'); card.className='member-card'+(m.isAdmin?' admin-card':'');
+    card.innerHTML=`<div class="member-card-avatar">${initials(m.name)}</div><div class="member-card-name">${m.name} ${m.isAdmin?'<span class="admin-badge">Admin</span>':''}</div><div class="member-card-stats">Membre actif</div>`;
+    g.appendChild(card);
   });
 }
 
-// ── Expose globals for inline handlers ──
-window.loginWith = loginWith;
-window.switchTab = switchTab;
-window.changeDay = changeDay;
-window.openProposeModal = openProposeModal;
-window.addPartField = addPartField;
-window.adminAddBook = adminAddBook;
-window.closeModal = closeModal;
-window.confirmReserve = confirmReserve;
-window.submitConfirm = submitConfirm;
-window.submitProposal = submitProposal;
-window.logout = logout;
-window.toggleBook = toggleBook;
-window.openReserveModal = openReserveModal;
-window.openConfirmModal = openConfirmModal;
-window.cancelReservation = cancelReservation;
-window.deleteBook = deleteBook;
-window.approveProposal = approveProposal;
-window.rejectProposal = rejectProposal;
-window.removePartField = removePartField;
+// ── PDF ──
+async function loadPdfJs() {
+  if (pdfLib) return pdfLib;
+  return new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload=()=>{ pdfLib=window['pdfjs-dist/build/pdf']; pdfLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(pdfLib); };
+    s.onerror=rej; document.head.appendChild(s);
+  });
+}
+async function handlePdf(file) {
+  if (!file||file.type!=='application/pdf') { toast('Fichier PDF requis','error'); return; }
+  toast('Analyse du PDF...','');
+  try {
+    const lib=await loadPdfJs();
+    const pdf=await lib.getDocument({data:await file.arrayBuffer()}).promise;
+    pdfPages=pdf.numPages;
+    document.getElementById('pdf-page-count').textContent=pdfPages;
+    document.getElementById('pdf-filename').textContent='📄 '+file.name;
+    document.getElementById('pdf-info').classList.add('show');
+    document.getElementById('pdf-drop-zone').style.display='none';
+    updateSplit();
+    toast(pdfPages+' pages détectées !','success');
+  } catch(e) { toast('Erreur PDF : '+e.message,'error'); console.error(e); }
+}
+function updateSplit() {
+  if (!pdfPages) return;
+  const n=parseInt(document.getElementById('pdf-parts-count').value)||1;
+  const base=Math.floor(pdfPages/n), rem=pdfPages%n;
+  const prev=document.getElementById('pdf-split-preview'); prev.innerHTML='';
+  for (let i=0;i<n;i++) {
+    const start=i*base+1+(i<rem?i:rem), end=start+base-1+(i<rem?1:0);
+    const chip=document.createElement('div'); chip.className='pdf-split-chip';
+    chip.textContent=`P${i+1}: p.${start}–${end}`; prev.appendChild(chip);
+  }
+}
+function applySplit() {
+  if (!pdfPages) return;
+  const n=parseInt(document.getElementById('pdf-parts-count').value)||1;
+  const base=Math.floor(pdfPages/n), rem=pdfPages%n;
+  partFields=[];
+  for (let i=0;i<n;i++) {
+    const start=i*base+1+(i<rem?i:rem), end=start+base-1+(i<rem?1:0);
+    partFields.push({label:`Partie ${i+1}`,description:`Pages ${start} à ${end} (${end-start+1} pages)`});
+  }
+  renderPartFields(); toast(n+' parties générées !','success');
+}
+function clearPdf() {
+  pdfPages=0;
+  document.getElementById('pdf-info').classList.remove('show');
+  document.getElementById('pdf-drop-zone').style.display='block';
+  document.getElementById('pdf-file-input').value='';
+  document.getElementById('pdf-split-preview').innerHTML='';
+}
+
+// ── BIND ALL EVENTS ──
+document.getElementById('btn-rejoindre').addEventListener('click',()=>loginWith(document.getElementById('pseudo-input').value));
+document.getElementById('pseudo-input').addEventListener('keydown',e=>{ if(e.key==='Enter') loginWith(document.getElementById('pseudo-input').value); });
+document.getElementById('btn-logout').addEventListener('click',logout);
+document.getElementById('tab-today').addEventListener('click',()=>switchTab('today'));
+document.getElementById('tab-members').addEventListener('click',()=>switchTab('members'));
+document.getElementById('tab-admin').addEventListener('click',()=>switchTab('admin'));
+document.getElementById('btn-prev-day').addEventListener('click',()=>changeDay(-1));
+document.getElementById('btn-next-day').addEventListener('click',()=>changeDay(1));
+document.getElementById('btn-open-propose').addEventListener('click',()=>{
+  document.getElementById('propose-title').value='';
+  document.getElementById('propose-author').value='';
+  document.getElementById('propose-reason').value='';
+  openModal('modal-propose');
+});
+document.getElementById('btn-reserve-cancel').addEventListener('click',()=>closeModal('modal-reserve'));
+document.getElementById('btn-reserve-confirm').addEventListener('click',doReserve);
+document.getElementById('btn-confirm-cancel').addEventListener('click',()=>closeModal('modal-confirm'));
+document.getElementById('btn-confirm-ok').addEventListener('click',doConfirm);
+document.getElementById('btn-propose-cancel').addEventListener('click',()=>closeModal('modal-propose'));
+document.getElementById('btn-propose-ok').addEventListener('click',doPropose);
+document.getElementById('btn-add-part').addEventListener('click',()=>{ partFields.push({label:'',description:''}); renderPartFields(); });
+document.getElementById('btn-admin-add-book').addEventListener('click',adminAddBook);
+document.getElementById('btn-apply-split').addEventListener('click',applySplit);
+document.getElementById('btn-clear-pdf').addEventListener('click',clearPdf);
+document.getElementById('pdf-parts-count').addEventListener('input',updateSplit);
+document.getElementById('pdf-file-input').addEventListener('change',e=>{ if(e.target.files[0]) handlePdf(e.target.files[0]); });
+
+const zone=document.getElementById('pdf-drop-zone');
+zone.addEventListener('dragover',e=>{ e.preventDefault(); zone.classList.add('drag-over'); });
+zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+zone.addEventListener('drop',e=>{ e.preventDefault(); zone.classList.remove('drag-over'); if(e.dataTransfer.files[0]) handlePdf(e.dataTransfer.files[0]); });
+
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); });
+});
 
 // ── START ──
 init();
