@@ -3,26 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BookTrack</title>
+<title>XassidaTrack</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
   :root {
-    --bg:#0f0e0c; --bg2:#191814; --bg3:#211f1a;
-    --surface:#2a271f; --surface2:#332f24;
-    --border:rgba(255,240,200,0.08); --border2:rgba(255,240,200,0.15);
-    --gold:#d4a84b; --gold2:#e8c06a; --gold3:#f5d98a; --amber:#c07a20;
-    --text:#f0e8d8; --text2:#a89880; --text3:#6a5f4a;
-    --green:#4a9960; --green-bg:rgba(74,153,96,0.12);
-    --red:#c04040; --red-bg:rgba(192,64,64,0.12);
-    --blue:#4a80b0; --blue-bg:rgba(74,128,176,0.12);
+    --bg:#f4f9f4; --bg2:#ffffff; --bg3:#e8f3e8;
+    --surface:#edf5ed; --surface2:#dceedd;
+    --border:rgba(34,120,60,0.12); --border2:rgba(34,120,60,0.25);
+    --gold:#1e7a3e; --gold2:#25a050; --gold3:#2ecc71; --amber:#157a38;
+    --text:#0f2d1a; --text2:#4a7a5a; --text3:#8ab39a;
+    --green:#1e7a3e; --green-bg:rgba(30,122,62,0.10);
+    --red:#c0392b; --red-bg:rgba(192,57,43,0.10);
+    --blue:#2471a3; --blue-bg:rgba(36,113,163,0.10);
     --radius:10px; --radius-lg:16px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;}
 
-  #splash{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:40px;background:radial-gradient(ellipse at 50% 40%,#2a220a 0%,#0f0e0c 70%);}
+  #splash{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:40px;background:radial-gradient(ellipse at 50% 40%,#c8ecd4 0%,#f4f9f4 70%);}
   .splash-logo{text-align:center;}
-  .splash-logo h1{font-family:'Lora',serif;font-size:48px;font-weight:600;background:linear-gradient(135deg,var(--gold),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .splash-logo h1{font-family:'Lora',serif;font-size:48px;font-weight:600;background:linear-gradient(135deg,#1e7a3e,#2ecc71);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
   .splash-logo p{color:var(--text2);font-size:13px;letter-spacing:3px;text-transform:uppercase;margin-top:8px;}
   .splash-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:32px;width:360px;display:flex;flex-direction:column;gap:16px;}
   .splash-card h2{font-size:16px;font-weight:500;color:var(--text2);text-align:center;}
@@ -99,7 +99,7 @@
   .part-assignee{min-width:180px;}
   .assignee-chips{display:flex;flex-wrap:wrap;gap:4px;}
   .assignee-chip{background:var(--surface2);border-radius:12px;padding:3px 10px;font-size:11px;color:var(--text2);}
-  .assignee-chip.me{background:rgba(212,168,75,0.15);color:var(--gold2);border:1px solid rgba(212,168,75,0.3);}
+  .assignee-chip.me{background:rgba(30,122,62,0.15);color:var(--gold2);border:1px solid rgba(30,122,62,0.3);}
   .assignee-chip.confirmed{background:var(--green-bg);color:var(--green);}
   .part-status{flex-shrink:0;display:flex;gap:6px;align-items:center;}
   .status-dot{width:8px;height:8px;border-radius:50%;}
@@ -139,7 +139,7 @@
   .member-card-avatar{width:48px;height:48px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:var(--gold);margin:0 auto 10px;border:2px solid var(--border2);}
   .member-card-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;}
   .member-card-stats{font-size:12px;color:var(--text3);}
-  .member-card.admin-card{border-color:rgba(212,168,75,0.3);background:rgba(212,168,75,0.04);}
+  .member-card.admin-card{border-color:rgba(30,122,62,0.3);background:rgba(30,122,62,0.04);}
 
   #toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:12px 18px;font-size:13px;color:var(--text);z-index:300;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
   #toast.show{opacity:1;transform:translateY(0);}
@@ -152,23 +152,23 @@
   .deadline-bar.urgent .time{color:var(--red);}
   .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-size:12px;color:var(--text3);}
   .legend-item{display:flex;align-items:center;gap:6px;}
-  .propose-banner{background:linear-gradient(135deg,rgba(212,168,75,0.08),rgba(212,168,75,0.03));border:1px dashed rgba(212,168,75,0.3);border-radius:var(--radius);padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+  .propose-banner{background:linear-gradient(135deg,rgba(30,122,62,0.08),rgba(30,122,62,0.03));border:1px dashed rgba(30,122,62,0.3);border-radius:var(--radius);padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
   .propose-banner p{flex:1;font-size:13px;color:var(--text2);}
 
   .pdf-drop-zone{border:2px dashed var(--border2);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);position:relative;}
   .pdf-drop-zone:hover,.pdf-drop-zone.drag-over{border-color:var(--gold);background:rgba(212,168,75,0.05);}
   .pdf-drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-  .pdf-info{background:rgba(212,168,75,0.08);border:1px solid rgba(212,168,75,0.3);border-radius:var(--radius);padding:12px 16px;display:none;gap:12px;align-items:flex-start;font-size:13px;}
+  .pdf-info{background:rgba(30,122,62,0.08);border:1px solid rgba(30,122,62,0.3);border-radius:var(--radius);padding:12px 16px;display:none;gap:12px;align-items:flex-start;font-size:13px;}
   .pdf-info.show{display:flex;}
   .pdf-pages{color:var(--gold);font-weight:600;font-size:18px;}
   .pdf-split-preview{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
-  .pdf-split-chip{background:var(--surface2);border:1px solid rgba(212,168,75,0.3);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--gold2);}
+  .pdf-split-chip{background:var(--surface2);border:1px solid rgba(30,122,62,0.3);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--gold2);}
 
   .tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;}
   .tag-proposal{background:rgba(192,122,32,0.15);color:var(--amber);border:1px solid var(--amber);}
 
   ::-webkit-scrollbar{width:6px;}
-  ::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px;}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
   @media(max-width:600px){
     .topbar{padding:0 12px;gap:8px;}
     .topbar-logo{font-size:16px;}
@@ -183,7 +183,7 @@
 
 <div id="splash">
   <div class="splash-logo">
-    <h1>📖 BookTrack</h1>
+    <h1>📖 XassidaTrack</h1>
     <p>Gestion de lecture collective</p>
   </div>
   <div class="splash-card">
@@ -197,7 +197,7 @@
 
 <div id="app">
   <div class="topbar">
-    <div class="topbar-logo">📖 BookTrack</div>
+    <div class="topbar-logo">📖 XassidaTrack</div>
     <div class="topbar-date" id="topbar-date"></div>
     <div class="nav-tabs">
       <button class="nav-tab active" id="tab-today">Aujourd'hui</button>
@@ -250,50 +250,6 @@
     <div class="tab-panel" id="panel-admin">
       <div class="section-header"><div class="section-title">⚡ Propositions en attente</div></div>
       <div id="proposals-list" style="margin-bottom:24px"><p style="color:var(--text3);font-size:13px">Aucune proposition.</p></div>
-
-      <div class="section-header"><div class="section-title">📘 Ajouter un livre</div></div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:12px;">
-        <div class="modal-row">
-          <div class="form-group"><label class="form-label">Titre *</label><input type="text" id="admin-book-title" placeholder="Ex: L'Alchimiste"></div>
-          <div class="form-group"><label class="form-label">Auteur</label><input type="text" id="admin-book-author" placeholder="Paulo Coelho"></div>
-        </div>
-        <div class="modal-row">
-          <div class="form-group"><label class="form-label">Date *</label><input type="text" id="admin-book-date"></div>
-          <div class="form-group"><label class="form-label">Icône</label><input type="text" id="admin-book-icon" placeholder="📖" maxlength="4" style="width:80px"></div>
-        </div>
-        <div>
-          <label class="form-label" style="margin-bottom:8px;display:block">PDF du livre (optionnel)</label>
-          <div class="pdf-drop-zone" id="pdf-drop-zone">
-            <input type="file" id="pdf-file-input" accept=".pdf">
-            <div style="font-size:28px;margin-bottom:6px">📄</div>
-            <div style="font-size:13px;color:var(--text2)">Glisse le PDF ici ou clique pour choisir</div>
-          </div>
-          <div class="pdf-info" id="pdf-info">
-            <div>
-              <div class="pdf-pages" id="pdf-page-count">–</div>
-              <div style="color:var(--text2);font-size:12px">pages</div>
-            </div>
-            <div style="flex:1">
-              <div style="color:var(--text);font-size:13px;margin-bottom:6px" id="pdf-filename"></div>
-              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                <span style="color:var(--text2);font-size:12px">Nb de parties :</span>
-                <input type="number" id="pdf-parts-count" min="1" max="50" value="2" style="width:60px;padding:4px 8px;font-size:13px">
-                <button class="btn btn-gold btn-sm" id="btn-apply-split">Découper</button>
-              </div>
-              <div class="pdf-split-preview" id="pdf-split-preview"></div>
-            </div>
-            <button class="btn btn-ghost btn-sm" id="btn-clear-pdf" style="align-self:flex-start">✕</button>
-          </div>
-        </div>
-        <div>
-          <label class="form-label" style="margin-bottom:8px;display:block">Parties</label>
-          <div class="parts-builder" id="admin-parts-builder"></div>
-          <button class="btn btn-ghost btn-sm" style="margin-top:8px" id="btn-add-part">+ Ajouter une partie</button>
-        </div>
-        <div style="display:flex;justify-content:flex-end;margin-top:8px">
-          <button class="btn btn-gold" id="btn-admin-add-book">Ajouter le livre</button>
-        </div>
-      </div>
 
       <div class="section-header" style="margin-top:24px"><div class="section-title">📅 Livres existants</div></div>
       <div id="admin-books-list" style="display:flex;flex-direction:column;gap:8px;"></div>
@@ -357,7 +313,7 @@ const firebaseConfig = {
   appId: "1:921554278130:web:38951124868766f48a626b"
 };
 
-const fbApp = initializeApp(firebaseConfig, 'booktrack');
+const fbApp = initializeApp(firebaseConfig, 'xassidatrack');
 const db = getFirestore(fbApp);
 
 const C_MEMBERS = 'bt_members';
@@ -888,17 +844,7 @@ document.getElementById('btn-confirm-cancel').addEventListener('click',()=>close
 document.getElementById('btn-confirm-ok').addEventListener('click',doConfirm);
 document.getElementById('btn-propose-cancel').addEventListener('click',()=>closeModal('modal-propose'));
 document.getElementById('btn-propose-ok').addEventListener('click',doPropose);
-document.getElementById('btn-add-part').addEventListener('click',()=>{ partFields.push({label:'',description:''}); renderPartFields(); });
-document.getElementById('btn-admin-add-book').addEventListener('click',adminAddBook);
-document.getElementById('btn-apply-split').addEventListener('click',applySplit);
-document.getElementById('btn-clear-pdf').addEventListener('click',clearPdf);
-document.getElementById('pdf-parts-count').addEventListener('input',updateSplit);
-document.getElementById('pdf-file-input').addEventListener('change',e=>{ if(e.target.files[0]) handlePdf(e.target.files[0]); });
 
-const zone=document.getElementById('pdf-drop-zone');
-zone.addEventListener('dragover',e=>{ e.preventDefault(); zone.classList.add('drag-over'); });
-zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
-zone.addEventListener('drop',e=>{ e.preventDefault(); zone.classList.remove('drag-over'); if(e.dataTransfer.files[0]) handlePdf(e.dataTransfer.files[0]); });
 
 document.querySelectorAll('.modal-overlay').forEach(o=>{
   o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); });
