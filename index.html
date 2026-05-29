@@ -38,6 +38,9 @@
   input::placeholder{color:var(--text3);}
   textarea{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-family:'Sora',sans-serif;font-size:14px;width:100%;outline:none;resize:vertical;min-height:80px;}
   textarea:focus{border-color:var(--primary);}
+  select{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;color:var(--text);font-family:'Sora',sans-serif;font-size:14px;width:100%;outline:none;appearance:none;}
+  select:focus{border-color:var(--primary);}
+  option{background:var(--bg2);}
 
   /* BUTTONS */
   .btn{padding:10px 20px;border-radius:var(--radius);border:none;cursor:pointer;font-family:'Sora',sans-serif;font-size:14px;font-weight:500;transition:all .2s;}
@@ -55,7 +58,7 @@
   .remove-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:2px 6px;transition:color .2s;}
   .remove-btn:hover{color:var(--red);}
 
-  /* APP LAYOUT */
+  /* APP */
   #app{display:none;flex-direction:column;min-height:100vh;}
   .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(30,122,62,0.06);}
   .topbar-logo{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--primary);flex:1;}
@@ -76,11 +79,14 @@
   .tab-panel.active{display:block;}
 
   /* DATE NAV */
-  .date-nav{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+  .date-nav{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
   .date-nav button{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 14px;color:var(--text2);cursor:pointer;font-family:'Sora',sans-serif;font-size:13px;transition:all .2s;}
   .date-nav button:hover{border-color:var(--primary);color:var(--primary);}
   .date-display{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--text);flex:1;text-align:center;}
   .date-display.today{color:var(--primary);}
+
+  /* DAY LABEL BADGE */
+  .day-badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:4px 14px;font-size:13px;color:var(--primary);font-weight:500;margin-bottom:16px;}
 
   /* BOOK CARDS */
   .books-grid{display:flex;flex-direction:column;gap:16px;}
@@ -96,11 +102,9 @@
   .book-stats{display:flex;gap:16px;font-size:12px;color:var(--text3);}
   .book-chevron{color:var(--text3);font-size:18px;transition:transform .3s;margin-left:auto;align-self:center;}
   .book-chevron.open{transform:rotate(180deg);}
-
-  /* PARTS */
   .parts-container{display:none;border-top:1px solid var(--border);}
   .parts-container.open{display:block;}
-  .part-row{display:flex;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid var(--border);transition:background .2s;}
+  .part-row{display:flex;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid var(--border);transition:background .2s;flex-wrap:wrap;}
   .part-row:hover{background:var(--surface);}
   .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
   .status-dot.free{background:var(--text3);}
@@ -108,14 +112,14 @@
   .status-dot.confirmed{background:var(--green);}
   .status-dot.full{background:var(--red);}
   .part-label{width:110px;font-size:13px;color:var(--text2);flex-shrink:0;}
-  .part-desc{flex:1;font-size:13px;color:var(--text);}
-  .assignee-chips{display:flex;flex-wrap:wrap;gap:4px;min-width:160px;}
+  .part-desc{flex:1;font-size:13px;color:var(--text);min-width:100px;}
+  .assignee-chips{display:flex;flex-wrap:wrap;gap:4px;min-width:140px;}
   .assignee-chip{background:var(--surface2);border-radius:12px;padding:3px 10px;font-size:11px;color:var(--text2);}
   .assignee-chip.me{background:rgba(30,122,62,0.12);color:var(--primary);border:1px solid rgba(30,122,62,0.3);}
   .assignee-chip.confirmed{background:var(--green-bg);color:var(--green);}
   .part-status{flex-shrink:0;display:flex;gap:6px;align-items:center;}
 
-  /* EMPTY STATE */
+  /* EMPTY */
   .empty-state{text-align:center;padding:60px 20px;color:var(--text3);}
   .empty-state .icon{font-size:40px;margin-bottom:12px;}
   .empty-state p{font-size:14px;}
@@ -123,7 +127,7 @@
   /* MODALS */
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
   .modal-overlay.open{display:flex;}
-  .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px;box-shadow:0 8px 32px rgba(30,122,62,0.12);}
+  .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px;box-shadow:0 8px 32px rgba(30,122,62,0.12);}
   .modal h3{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--primary);}
   .modal-row{display:flex;gap:10px;}
   .form-group{display:flex;flex-direction:column;gap:6px;flex:1;}
@@ -131,16 +135,35 @@
   .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px;}
 
   /* ADMIN */
-  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;margin-top:28px;}
+  .section-header:first-child{margin-top:0;}
   .section-title{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--text);}
-  .admin-card-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:14px;margin-bottom:24px;box-shadow:0 1px 6px rgba(30,122,62,0.04);}
+  .admin-card-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 6px rgba(30,122,62,0.04);}
   .parts-builder{display:flex;flex-direction:column;gap:8px;}
   .part-builder-row{display:flex;gap:8px;align-items:center;background:var(--surface);border-radius:8px;padding:8px 12px;}
-  .part-builder-row span{color:var(--text3);font-size:12px;min-width:32px;}
+  .part-builder-row span{color:var(--text3);font-size:12px;min-width:28px;}
+
+  /* SCHEDULE GRID */
+  .schedule-grid{display:flex;flex-direction:column;gap:8px;}
+  .schedule-day{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .schedule-day-header{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;background:var(--surface);cursor:pointer;transition:background .2s;}
+  .schedule-day-header:hover{background:var(--surface2);}
+  .schedule-day-name{font-weight:600;font-size:14px;color:var(--primary);}
+  .schedule-day-count{font-size:12px;color:var(--text3);}
+  .schedule-day-books{display:none;padding:8px 16px;gap:6px;flex-direction:column;}
+  .schedule-day-books.open{display:flex;}
+  .schedule-book-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface);border-radius:8px;font-size:13px;}
+  .schedule-book-item .book-icon{font-size:18px;}
+  .schedule-book-item .book-name{flex:1;color:var(--text);}
+  .schedule-book-item .book-parts-count{color:var(--text3);font-size:12px;}
+
+  /* BOOK LIST */
   .book-list-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
   .book-list-info{flex:1;}
-  .book-list-title{font-size:14px;color:var(--text);margin-bottom:2px;}
+  .book-list-title{font-size:14px;color:var(--text);margin-bottom:2px;font-weight:500;}
   .book-list-meta{font-size:12px;color:var(--text3);}
+  .book-list-days{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+  .day-chip{background:var(--green-bg);border:1px solid rgba(30,122,62,0.2);border-radius:10px;padding:2px 8px;font-size:11px;color:var(--primary);}
 
   /* MEMBERS */
   .members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
@@ -151,7 +174,7 @@
   .member-role{font-size:12px;color:var(--text3);}
 
   /* MISC */
-  .deadline-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:13px;}
+  .deadline-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;font-size:13px;}
   .deadline-bar .dl-label{color:var(--text2);}
   .deadline-bar .dl-time{color:var(--primary);font-weight:600;font-variant-numeric:tabular-nums;}
   .deadline-bar.urgent .dl-time{color:var(--red);}
@@ -168,7 +191,6 @@
     .topbar-logo{font-size:16px;}
     .topbar-date{display:none;}
     .content{padding:12px;}
-    .part-row{flex-wrap:wrap;}
     .nav-tab{padding:5px 8px;font-size:12px;}
     .splash-card{width:calc(100vw - 32px);}
   }
@@ -206,7 +228,7 @@
       <span id="user-name-badge"></span>
       <span class="admin-badge" id="admin-badge-top" style="display:none">Admin</span>
     </div>
-    <button class="logout-btn" id="btn-logout" title="Se déconnecter">⏏</button>
+    <button class="logout-btn" id="btn-logout">⏏</button>
   </div>
 
   <div class="content">
@@ -222,6 +244,7 @@
         <div class="date-display" id="date-display"></div>
         <button id="btn-next-day">Après →</button>
       </div>
+      <div id="day-badge-container"></div>
       <div class="legend">
         <div class="legend-item"><div class="status-dot free"></div>Libre</div>
         <div class="legend-item"><div class="status-dot taken"></div>Réservé</div>
@@ -235,7 +258,7 @@
 
     <!-- MEMBERS TAB -->
     <div class="tab-panel" id="panel-members">
-      <div class="section-header">
+      <div class="section-header" style="margin-top:0">
         <div class="section-title">👥 Membres du groupe</div>
         <span id="members-count" style="color:var(--text3);font-size:13px"></span>
       </div>
@@ -244,7 +267,9 @@
 
     <!-- ADMIN TAB -->
     <div class="tab-panel" id="panel-admin">
-      <div class="section-header"><div class="section-title">📘 Ajouter un livre</div></div>
+
+      <!-- ADD BOOK -->
+      <div class="section-header" style="margin-top:0"><div class="section-title">📘 Ajouter un livre</div></div>
       <div class="admin-card-box">
         <div class="modal-row">
           <div class="form-group">
@@ -258,10 +283,6 @@
         </div>
         <div class="modal-row">
           <div class="form-group">
-            <label class="form-label">Date *</label>
-            <input type="text" id="admin-book-date">
-          </div>
-          <div class="form-group" style="max-width:100px">
             <label class="form-label">Icône</label>
             <input type="text" id="admin-book-icon" placeholder="📖" maxlength="4">
           </div>
@@ -276,10 +297,16 @@
         </div>
       </div>
 
-      <div class="section-header"><div class="section-title">📅 Livres existants</div></div>
-      <div id="admin-books-list"></div>
-    </div>
+      <!-- SCHEDULE -->
+      <div class="section-header"><div class="section-title">📅 Planning de la semaine</div></div>
+      <p style="color:var(--text2);font-size:13px;margin-bottom:12px">Définis quels livres sont lus chaque jour. Ce planning se répète chaque semaine en boucle.</p>
+      <div class="schedule-grid" id="schedule-grid"></div>
 
+      <!-- BOOK LIST -->
+      <div class="section-header"><div class="section-title">📚 Tous les livres</div></div>
+      <div id="admin-books-list"></div>
+
+    </div>
   </div>
 </div>
 
@@ -315,6 +342,22 @@
   </div>
 </div>
 
+<!-- MODAL SCHEDULE (assign book to day) -->
+<div class="modal-overlay" id="modal-schedule">
+  <div class="modal">
+    <h3>📅 Assigner un livre</h3>
+    <p style="color:var(--text2);font-size:13px" id="schedule-day-info"></p>
+    <div class="form-group">
+      <label class="form-label">Livre</label>
+      <select id="schedule-book-select"></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-schedule-cancel">Annuler</button>
+      <button class="btn btn-primary" id="btn-schedule-confirm">Assigner</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script type="module">
@@ -336,11 +379,15 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig, 'xassidatrack');
 const db    = getFirestore(fbApp);
 
-const C_MEMBERS = 'bt_members';
-const C_BOOKS   = 'bt_books';
-const C_RES     = 'bt_reservations';
+// Collections
+const C_MEMBERS  = 'bt_members';
+const C_BOOKS    = 'bt_books';    // livres fixes (pas de champ date)
+const C_RES      = 'bt_reservations'; // bookId, partId, userId, date (YYYY-MM-DD)
+const C_SCHEDULE = 'bt_schedule'; // doc par jour de semaine (0=dim..6=sam) → {bookIds:[]}
 
-// ── STATE ──
+const DAYS_FR = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+
+// State
 let currentUser    = null;
 let isAdmin        = false;
 let currentDateStr = todayStr();
@@ -349,19 +396,22 @@ let renderToken    = 0;
 let reserveCtx     = null;
 let confirmCtx     = null;
 let partFields     = [];
+let scheduleCtx    = null; // { dayIndex }
+let allBooks       = [];   // cache
 
 // ── UTILS ──
 function todayStr() { return new Date().toISOString().slice(0,10); }
 function dateFR(str) {
   const d = new Date(str + 'T12:00:00');
-  const s = d.toLocaleDateString('fr-FR', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const s = d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   return s[0].toUpperCase() + s.slice(1);
 }
-function initials(name) { return name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0,2); }
+function dayIndex(str) { return new Date(str + 'T12:00:00').getDay(); } // 0=dim
+function initials(n) { return n.split(' ').map(p=>p[0]).join('').toUpperCase().slice(0,2); }
 function toast(msg, type='') {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'show ' + type;
-  setTimeout(() => t.className = '', 3000);
+  setTimeout(()=> t.className='', 3000);
 }
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
@@ -380,7 +430,7 @@ async function init() {
     const chips = document.getElementById('member-chips');
     chips.innerHTML = '';
     if (snap.empty) {
-      chips.innerHTML = '<p style="color:var(--text3);font-size:12px;width:100%">Aucun membre enregistré.</p>';
+      chips.innerHTML = '<p style="color:var(--text3);font-size:12px;width:100%">Aucun membre. Saisis ton pseudo.</p>';
     } else {
       snap.forEach(d => {
         const el = document.createElement('div');
@@ -390,25 +440,22 @@ async function init() {
         chips.appendChild(el);
       });
     }
-  } catch(e) {
-    console.error('init error:', e);
-    toast('Erreur Firebase : ' + e.message, 'error');
-  }
+  } catch(e) { toast('Erreur Firebase : ' + e.message, 'error'); console.error(e); }
 }
 
 // ── LOGIN ──
 async function loginWith(name) {
-  name = (name || '').trim();
-  if (!name) { toast('Saisis un pseudo', 'error'); return; }
+  name = (name||'').trim();
+  if (!name) { toast('Saisis un pseudo','error'); return; }
   try {
-    const id   = name.toLowerCase().replace(/\s+/g, '_');
+    const id   = name.toLowerCase().replace(/\s+/g,'_');
     const ref  = doc(db, C_MEMBERS, id);
     const snap = await getDoc(ref);
     if (!snap.exists()) {
-      await setDoc(ref, { name, isAdmin: false, joinedAt: serverTimestamp() });
+      await setDoc(ref, {name, isAdmin:false, joinedAt:serverTimestamp()});
     }
-    const data  = snap.exists() ? snap.data() : { name, isAdmin: false };
-    currentUser = { id, name: data.name || name };
+    const data  = snap.exists() ? snap.data() : {name, isAdmin:false};
+    currentUser = {id, name: data.name || name};
     isAdmin     = data.isAdmin || false;
     localStorage.setItem('xt_user', currentUser.name);
 
@@ -418,16 +465,14 @@ async function loginWith(name) {
     document.getElementById('tab-admin').style.display       = isAdmin ? 'block'  : 'none';
     document.getElementById('splash').style.display          = 'none';
     document.getElementById('app').style.display             = 'flex';
-    document.getElementById('topbar-date').textContent       = new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long'});
+    document.getElementById('topbar-date').textContent       = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
 
     updateDateDisplay();
+    await refreshBooksCache();
     loadBooks();
     loadMembers();
     startCountdown();
-  } catch(e) {
-    console.error('login error:', e);
-    toast('Erreur : ' + e.message, 'error');
-  }
+  } catch(e) { toast('Erreur : '+e.message,'error'); console.error(e); }
 }
 
 function logout() {
@@ -436,9 +481,9 @@ function logout() {
   localStorage.removeItem('xt_user');
   document.getElementById('app').style.display    = 'none';
   document.getElementById('splash').style.display = 'flex';
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-today').classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-today').classList.add('active');
   document.getElementById('member-chips').innerHTML = '';
   init();
@@ -446,19 +491,19 @@ function logout() {
 
 // ── TABS ──
 function switchTab(name) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  document.getElementById('tab-' + name).classList.add('active');
-  if (name === 'admin')   { loadAdminBooks(); document.getElementById('admin-book-date').value = currentDateStr; }
-  if (name === 'members') { loadMembers(); }
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name==='admin')   { loadAdminBooks(); loadScheduleGrid(); }
+  if (name==='members') { loadMembers(); }
 }
 
 // ── DATE ──
 function changeDay(delta) {
   const d = new Date(currentDateStr + 'T12:00:00');
   d.setDate(d.getDate() + delta);
-  currentDateStr = d.toISOString().slice(0, 10);
+  currentDateStr = d.toISOString().slice(0,10);
   updateDateDisplay();
   loadBooks();
 }
@@ -467,77 +512,124 @@ function updateDateDisplay() {
   const isToday = currentDateStr === todayStr();
   el.textContent = isToday ? "Aujourd'hui — " + dateFR(currentDateStr) : dateFR(currentDateStr);
   el.className   = 'date-display' + (isToday ? ' today' : '');
-  const adminDate = document.getElementById('admin-book-date');
-  if (adminDate) adminDate.value = currentDateStr;
 }
 
 // ── COUNTDOWN ──
 function startCountdown() {
-  setInterval(() => {
-    const now = new Date(), end = new Date();
-    end.setHours(23, 59, 59, 0);
-    const diff = end - now;
-    if (diff < 0) { document.getElementById('countdown-display').textContent = 'Terminé'; return; }
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    document.getElementById('countdown-display').textContent = `${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
-    document.getElementById('deadline-bar').classList.toggle('urgent', h < 2);
-  }, 1000);
+  setInterval(()=>{
+    const now=new Date(), end=new Date();
+    end.setHours(23,59,59,0);
+    const diff=end-now;
+    if (diff<0){ document.getElementById('countdown-display').textContent='Terminé'; return; }
+    const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+    document.getElementById('countdown-display').textContent=`${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+    document.getElementById('deadline-bar').classList.toggle('urgent',h<2);
+  },1000);
 }
 
-// ── LOAD BOOKS ──
-function loadBooks() {
-  if (booksUnsub) booksUnsub();
+// ── BOOKS CACHE ──
+async function refreshBooksCache() {
+  const snap = await getDocs(collection(db, C_BOOKS));
+  allBooks = snap.docs.map(d => ({id:d.id,...d.data()}));
+}
+
+// ── GET BOOKS FOR A DAY (from schedule) ──
+async function getBooksForDay(dateStr) {
+  const di   = dayIndex(dateStr);
+  const snap = await getDoc(doc(db, C_SCHEDULE, String(di)));
+  if (!snap.exists() || !snap.data().bookIds?.length) return [];
+  const bookIds = snap.data().bookIds;
+  const books   = [];
+  for (const bid of bookIds) {
+    const b = allBooks.find(x=>x.id===bid);
+    if (b) {
+      const pSnap = await getDocs(collection(db, C_BOOKS, bid, 'parts'));
+      const parts = pSnap.docs.map(p=>({id:p.id,...p.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
+      books.push({book:b, parts});
+    }
+  }
+  return books;
+}
+
+// ── LOAD BOOKS (today tab) ──
+async function loadBooks() {
+  if (booksUnsub) { booksUnsub(); booksUnsub=null; }
   renderToken++;
   const myTok = renderToken;
   const grid  = document.getElementById('books-grid');
   grid.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>Chargement...</p></div>';
 
-  const q = query(collection(db, C_BOOKS), where('date', '==', currentDateStr));
-  booksUnsub = onSnapshot(q, async snap => {
-    if (myTok !== renderToken) return;
+  // Show day badge
+  const di     = dayIndex(currentDateStr);
+  const badge  = document.getElementById('day-badge-container');
+  badge.innerHTML = `<div class="day-badge">📅 ${DAYS_FR[di]}</div>`;
 
-    // save open cards
-    const openCards = new Set();
-    document.querySelectorAll('.parts-container.open').forEach(el => {
-      openCards.add(el.dataset.bookId);
+  // Get scheduled books for this day
+  const scheduled = await getBooksForDay(currentDateStr);
+
+  if (myTok !== renderToken) return;
+
+  if (scheduled.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">📅</div><p>Aucun livre planifié ce jour.</p>' +
+      (isAdmin ? '<p style="margin-top:8px;font-size:12px">Configure le planning dans l\'onglet Admin.</p>' : '') + '</div>';
+    return;
+  }
+
+  // For each book, load reservations for this specific date
+  const booksData = [];
+  for (const {book, parts} of scheduled) {
+    const rSnap = await getDocs(query(collection(db, C_RES),
+      where('bookId','==',book.id),
+      where('date','==',currentDateStr)
+    ));
+    const res = {};
+    rSnap.forEach(r => {
+      const d = r.data();
+      if (!res[d.partId]) res[d.partId] = [];
+      res[d.partId].push({id:r.id,...d});
     });
+    booksData.push({book, parts, res});
+  }
 
-    if (snap.empty) {
-      grid.innerHTML = '<div class="empty-state"><div class="icon">📚</div><p>Aucun livre programmé pour ce jour.</p></div>';
-      return;
+  if (myTok !== renderToken) return;
+
+  // Save open cards state
+  const openCards = new Set();
+  document.querySelectorAll('.parts-container.open').forEach(el=>{
+    openCards.add(el.dataset.bookId);
+  });
+
+  grid.innerHTML = '';
+  booksData.forEach(({book, parts, res}) => {
+    const card = buildBookCard(book, parts, res);
+    grid.appendChild(card);
+    if (openCards.has(book.id)) {
+      card.querySelector('.parts-container')?.classList.add('open');
+      card.querySelector('.book-chevron')?.classList.add('open');
     }
+  });
 
-    const books = [];
-    for (const bDoc of snap.docs) {
-      const book     = { id: bDoc.id, ...bDoc.data() };
-      const pSnap    = await getDocs(collection(db, C_BOOKS, book.id, 'parts'));
-      const parts    = pSnap.docs.map(p => ({ id: p.id, ...p.data() })).sort((a, b) => (a.order||0) - (b.order||0));
-      const rSnap    = await getDocs(query(collection(db, C_RES), where('bookId', '==', book.id)));
-      const res      = {};
-      rSnap.forEach(r => {
-        const d = r.data();
-        if (!res[d.partId]) res[d.partId] = [];
-        res[d.partId].push({ id: r.id, ...d });
-      });
-      books.push({ book, parts, res });
-    }
-
+  // Live updates: listen to reservations for this date
+  const q = query(collection(db, C_RES), where('date','==',currentDateStr));
+  booksUnsub = onSnapshot(q, async () => {
     if (myTok !== renderToken) return;
+    // Reload silently
+    const newOpen = new Set();
+    document.querySelectorAll('.parts-container.open').forEach(el=>newOpen.add(el.dataset.bookId));
+
     grid.innerHTML = '';
-    books.forEach(({ book, parts, res }) => {
-      const card = buildBookCard(book, parts, res);
+    for (const {book, parts} of scheduled) {
+      const rSnap2 = await getDocs(query(collection(db,C_RES),where('bookId','==',book.id),where('date','==',currentDateStr)));
+      const res2={};
+      rSnap2.forEach(r=>{ const d=r.data(); if(!res2[d.partId])res2[d.partId]=[]; res2[d.partId].push({id:r.id,...d}); });
+      const card = buildBookCard(book, parts, res2);
       grid.appendChild(card);
-      if (openCards.has(book.id)) {
+      if (newOpen.has(book.id)) {
         card.querySelector('.parts-container')?.classList.add('open');
         card.querySelector('.book-chevron')?.classList.add('open');
       }
-    });
-  }, err => {
-    console.error(err);
-    grid.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>Erreur : ' + err.message + '</p></div>';
-  });
+    }
+  }, err => console.error(err));
 }
 
 // ── BUILD BOOK CARD ──
@@ -545,34 +637,32 @@ function buildBookCard(book, parts, res) {
   const card = document.createElement('div');
   card.className = 'book-card';
 
-  let confirmed = 0, taken = 0;
+  let confirmed=0, taken=0;
   parts.forEach(p => {
-    const r  = res[p.id] || [];
-    const my = r.find(x => x.userId === currentUser.id);
+    const r  = res[p.id]||[];
+    const my = r.find(x=>x.userId===currentUser.id);
     if (my?.confirmed) confirmed++;
-    else if (r.length > 0) taken++;
+    else if (r.length>0) taken++;
   });
-  const pct = parts.length > 0 ? Math.round(confirmed / parts.length * 100) : 0;
+  const pct = parts.length>0 ? Math.round(confirmed/parts.length*100) : 0;
 
-  // Header
   const header = document.createElement('div');
   header.className = 'book-header';
   header.innerHTML = `
-    <div class="book-cover">${book.icon || '📖'}</div>
+    <div class="book-cover">${book.icon||'📖'}</div>
     <div class="book-info">
       <div class="book-title">${book.title}</div>
-      <div class="book-author">${book.author || ''}</div>
+      <div class="book-author">${book.author||''}</div>
       <div class="book-progress-bar"><div class="book-progress-fill" style="width:${pct}%"></div></div>
       <div class="book-stats">
         <span>${confirmed}/${parts.length} confirmées</span>
         <span>·</span>
-        <span>${taken} réservée${taken > 1 ? 's' : ''}</span>
+        <span>${taken} réservée${taken>1?'s':''}</span>
       </div>
     </div>
     <div class="book-chevron">▼</div>
   `;
 
-  // Parts container
   const partsContainer = document.createElement('div');
   partsContainer.className = 'parts-container';
   partsContainer.dataset.bookId = book.id;
@@ -582,67 +672,44 @@ function buildBookCard(book, parts, res) {
     header.querySelector('.book-chevron').classList.toggle('open');
   });
 
-  if (parts.length === 0) {
-    partsContainer.innerHTML = '<div style="padding:16px 20px;color:var(--text3);font-size:13px">Aucune partie définie.</div>';
+  if (parts.length===0) {
+    partsContainer.innerHTML='<div style="padding:16px 20px;color:var(--text3);font-size:13px">Aucune partie définie.</div>';
   } else {
     parts.forEach(part => {
-      const r    = res[part.id] || [];
-      const my   = r.find(x => x.userId === currentUser.id);
-      const full = part.maxReaders > 0 && r.length >= part.maxReaders;
-      const dot  = my?.confirmed ? 'confirmed' : (full ? 'full' : (r.length > 0 ? 'taken' : 'free'));
-
-      const chips = r.map(x => `
-        <div class="assignee-chip ${x.userId === currentUser.id ? 'me' : ''} ${x.confirmed ? 'confirmed' : ''}">
-          ${x.userName}${x.confirmed ? ' ✓' : ''}
-        </div>`).join('');
+      const r    = res[part.id]||[];
+      const my   = r.find(x=>x.userId===currentUser.id);
+      const full = part.maxReaders>0 && r.length>=part.maxReaders;
+      const dot  = my?.confirmed?'confirmed':(full?'full':(r.length>0?'taken':'free'));
+      const chips = r.map(x=>`<div class="assignee-chip ${x.userId===currentUser.id?'me':''} ${x.confirmed?'confirmed':''}">${x.userName}${x.confirmed?' ✓':''}</div>`).join('');
 
       const row = document.createElement('div');
       row.className = 'part-row';
       row.innerHTML = `
         <div class="status-dot ${dot}"></div>
-        <div class="part-label">${part.label || 'Partie ' + (part.order + 1)}</div>
-        <div class="part-desc">${part.description || ''}</div>
+        <div class="part-label">${part.label||'Partie '+(part.order+1)}</div>
+        <div class="part-desc">${part.description||''}</div>
         <div class="assignee-chips">${chips}</div>
-        <div class="part-status" id="act-${part.id}"></div>
+        <div class="part-status" id="act-${book.id}-${part.id}"></div>
       `;
 
-      const actDiv = row.querySelector('#act-' + part.id);
+      const actDiv = row.querySelector('#act-'+book.id+'-'+part.id);
       if (my) {
         if (!my.confirmed) {
-          const bc = document.createElement('button');
-          bc.className = 'btn btn-green btn-sm';
-          bc.textContent = '✓ Confirmer';
-          bc.addEventListener('click', () => openConfirmModal(part.label || 'Partie', my.id));
-          const bx = document.createElement('button');
-          bx.className = 'btn btn-red btn-sm';
-          bx.textContent = '✕';
-          bx.addEventListener('click', () => cancelRes(my.id));
-          actDiv.appendChild(bc);
-          actDiv.appendChild(bx);
+          const bc=document.createElement('button'); bc.className='btn btn-green btn-sm'; bc.textContent='✓ Confirmer';
+          bc.addEventListener('click',()=>openConfirmModal(part.label||'Partie',my.id));
+          const bx=document.createElement('button'); bx.className='btn btn-red btn-sm'; bx.textContent='✕';
+          bx.addEventListener('click',()=>cancelRes(my.id));
+          actDiv.appendChild(bc); actDiv.appendChild(bx);
         } else {
-          actDiv.innerHTML = '<span style="color:var(--green);font-size:12px;font-weight:500">✓ Lu</span>';
+          actDiv.innerHTML='<span style="color:var(--green);font-size:12px;font-weight:500">✓ Lu</span>';
         }
-      } else if (!full || isAdmin) {
-        const br = document.createElement('button');
-        br.className = 'btn btn-blue btn-sm';
-        br.textContent = 'Réserver';
-        br.addEventListener('click', () => openReserveModal(book.id, book.title, part.id, part.label || 'Partie'));
+      } else if (!full||isAdmin) {
+        const br=document.createElement('button'); br.className='btn btn-blue btn-sm'; br.textContent='Réserver';
+        br.addEventListener('click',()=>openReserveModal(book.id,book.title,part.id,part.label||'Partie'));
         actDiv.appendChild(br);
       }
       partsContainer.appendChild(row);
     });
-  }
-
-  // Admin delete
-  if (isAdmin) {
-    const footer = document.createElement('div');
-    footer.style.cssText = 'padding:10px 20px;border-top:1px solid var(--border)';
-    const del = document.createElement('button');
-    del.className = 'btn btn-red btn-sm';
-    del.textContent = '🗑 Supprimer le livre';
-    del.addEventListener('click', () => deleteBook(book.id));
-    footer.appendChild(del);
-    partsContainer.appendChild(footer);
   }
 
   card.appendChild(header);
@@ -652,7 +719,7 @@ function buildBookCard(book, parts, res) {
 
 // ── RESERVE ──
 function openReserveModal(bookId, bookTitle, partId, partLabel) {
-  reserveCtx = { bookId, partId };
+  reserveCtx = {bookId, partId};
   document.getElementById('reserve-info').textContent = `"${bookTitle}" — ${partLabel}`;
   document.getElementById('reserve-note').value = '';
   openModal('modal-reserve');
@@ -660,177 +727,284 @@ function openReserveModal(bookId, bookTitle, partId, partLabel) {
 async function doReserve() {
   if (!reserveCtx) return;
   try {
-    await addDoc(collection(db, C_RES), {
-      bookId: reserveCtx.bookId, partId: reserveCtx.partId,
-      userId: currentUser.id, userName: currentUser.name,
-      note: document.getElementById('reserve-note').value.trim(),
-      confirmed: false, date: currentDateStr, createdAt: serverTimestamp()
+    await addDoc(collection(db,C_RES),{
+      bookId:reserveCtx.bookId, partId:reserveCtx.partId,
+      userId:currentUser.id, userName:currentUser.name,
+      note:document.getElementById('reserve-note').value.trim(),
+      confirmed:false, date:currentDateStr, createdAt:serverTimestamp()
     });
     closeModal('modal-reserve');
-    toast('Partie réservée ! 📌', 'success');
-  } catch(e) { toast('Erreur : ' + e.message, 'error'); }
+    toast('Partie réservée ! 📌','success');
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
 
 // ── CONFIRM ──
 function openConfirmModal(partLabel, resId) {
-  confirmCtx = { resId };
-  document.getElementById('confirm-info').textContent = 'Confirmer : ' + partLabel;
+  confirmCtx = {resId};
+  document.getElementById('confirm-info').textContent = 'Confirmer : '+partLabel;
   document.getElementById('confirm-comment').value = '';
   openModal('modal-confirm');
 }
 async function doConfirm() {
   if (!confirmCtx) return;
   try {
-    await updateDoc(doc(db, C_RES, confirmCtx.resId), {
-      confirmed: true, confirmedAt: serverTimestamp(),
-      comment: document.getElementById('confirm-comment').value.trim()
+    await updateDoc(doc(db,C_RES,confirmCtx.resId),{
+      confirmed:true, confirmedAt:serverTimestamp(),
+      comment:document.getElementById('confirm-comment').value.trim()
     });
     closeModal('modal-confirm');
-    toast('Lecture confirmée ! ✅', 'success');
-  } catch(e) { toast('Erreur : ' + e.message, 'error'); }
+    toast('Lecture confirmée ! ✅','success');
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
 async function cancelRes(resId) {
   if (!confirm('Annuler cette réservation ?')) return;
-  try { await deleteDoc(doc(db, C_RES, resId)); toast('Réservation annulée', ''); }
-  catch(e) { toast('Erreur : ' + e.message, 'error'); }
-}
-
-// ── ADMIN: PARTS BUILDER ──
-function renderPartFields() {
-  const container = document.getElementById('admin-parts-builder');
-  if (!container) return;
-  container.innerHTML = '';
-  partFields.forEach((p, i) => {
-    const row = document.createElement('div');
-    row.className = 'part-builder-row';
-    row.innerHTML = `
-      <span>P${i + 1}</span>
-      <input type="text" placeholder="Label (ex: Partie A)" value="${p.label}" style="flex:1">
-      <input type="text" placeholder="Description (ex: Pages 1–50)" value="${p.description}" style="flex:2">
-      <button class="remove-btn">✕</button>
-    `;
-    row.querySelectorAll('input')[0].addEventListener('input', e => { partFields[i].label = e.target.value; });
-    row.querySelectorAll('input')[1].addEventListener('input', e => { partFields[i].description = e.target.value; });
-    row.querySelector('.remove-btn').addEventListener('click', () => { partFields.splice(i, 1); renderPartFields(); });
-    container.appendChild(row);
-  });
+  try { await deleteDoc(doc(db,C_RES,resId)); toast('Réservation annulée',''); }
+  catch(e) { toast('Erreur : '+e.message,'error'); }
 }
 
 // ── ADMIN: ADD BOOK ──
-async function adminAddBook() {
-  const title = document.getElementById('admin-book-title').value.trim();
-  const date  = document.getElementById('admin-book-date').value.trim();
-  if (!title || !date) { toast('Titre et date requis', 'error'); return; }
-  try {
-    const ref = await addDoc(collection(db, C_BOOKS), {
-      title,
-      author:     document.getElementById('admin-book-author').value.trim(),
-      date,
-      icon:       document.getElementById('admin-book-icon').value.trim() || '📖',
-      isProposal: false,
-      createdBy:  currentUser.id,
-      createdAt:  serverTimestamp()
-    });
-    for (let i = 0; i < partFields.length; i++) {
-      await addDoc(collection(db, C_BOOKS, ref.id, 'parts'), {
-        label:       partFields[i].label || `Partie ${i + 1}`,
-        description: partFields[i].description || '',
-        order:       i,
-        maxReaders:  1
-      });
-    }
-    document.getElementById('admin-book-title').value  = '';
-    document.getElementById('admin-book-author').value = '';
-    document.getElementById('admin-book-icon').value   = '';
-    partFields = [];
-    renderPartFields();
-    toast(`"${title}" ajouté ! 📘`, 'success');
-    loadAdminBooks();
-    loadBooks();
-  } catch(e) { toast('Erreur : ' + e.message, 'error'); }
+function renderPartFields() {
+  const c = document.getElementById('admin-parts-builder');
+  if (!c) return;
+  c.innerHTML = '';
+  partFields.forEach((p,i) => {
+    const row = document.createElement('div');
+    row.className = 'part-builder-row';
+    row.innerHTML = `<span>P${i+1}</span>
+      <input type="text" placeholder="Label" value="${p.label}" style="flex:1">
+      <input type="text" placeholder="Description (ex: Pages 1–50)" value="${p.description}" style="flex:2">
+      <button class="remove-btn">✕</button>`;
+    row.querySelectorAll('input')[0].addEventListener('input',e=>{partFields[i].label=e.target.value;});
+    row.querySelectorAll('input')[1].addEventListener('input',e=>{partFields[i].description=e.target.value;});
+    row.querySelector('.remove-btn').addEventListener('click',()=>{partFields.splice(i,1);renderPartFields();});
+    c.appendChild(row);
+  });
 }
 
-// ── ADMIN: BOOK LIST ──
-async function loadAdminBooks() {
-  const container = document.getElementById('admin-books-list');
-  container.innerHTML = '<p style="color:var(--text3);font-size:13px">Chargement...</p>';
+async function adminAddBook() {
+  const title = document.getElementById('admin-book-title').value.trim();
+  if (!title) { toast('Titre requis','error'); return; }
   try {
-    const snap = await getDocs(query(collection(db, C_BOOKS), orderBy('date', 'desc')));
-    if (snap.empty) { container.innerHTML = '<p style="color:var(--text3);font-size:13px">Aucun livre.</p>'; return; }
-    container.innerHTML = '';
-    snap.forEach(d => {
-      const b    = d.data();
-      const item = document.createElement('div');
-      item.className = 'book-list-item';
-      item.innerHTML = `
-        <div class="book-list-info">
-          <div class="book-list-title">${b.icon || '📖'} ${b.title}</div>
-          <div class="book-list-meta">📅 ${b.date} ${b.author ? '— ' + b.author : ''}</div>
-        </div>
-      `;
-      const del = document.createElement('button');
-      del.className = 'btn btn-red btn-sm';
-      del.textContent = '🗑';
-      del.addEventListener('click', () => deleteBook(d.id));
-      item.appendChild(del);
-      container.appendChild(item);
+    const ref = await addDoc(collection(db,C_BOOKS),{
+      title,
+      author:document.getElementById('admin-book-author').value.trim(),
+      icon:  document.getElementById('admin-book-icon').value.trim()||'📖',
+      createdBy:currentUser.id, createdAt:serverTimestamp()
     });
-  } catch(e) { container.innerHTML = '<p style="color:var(--text3)">Erreur : ' + e.message + '</p>'; }
+    for (let i=0;i<partFields.length;i++) {
+      await addDoc(collection(db,C_BOOKS,ref.id,'parts'),{
+        label:partFields[i].label||`Partie ${i+1}`,
+        description:partFields[i].description||'',
+        order:i, maxReaders:1
+      });
+    }
+    document.getElementById('admin-book-title').value='';
+    document.getElementById('admin-book-author').value='';
+    document.getElementById('admin-book-icon').value='';
+    partFields=[]; renderPartFields();
+    await refreshBooksCache();
+    toast(`"${title}" ajouté !`,'success');
+    loadAdminBooks(); loadScheduleGrid();
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
 
 async function deleteBook(id) {
-  if (!confirm('Supprimer ce livre ?')) return;
-  try { await deleteDoc(doc(db, C_BOOKS, id)); toast('Livre supprimé', ''); loadAdminBooks(); }
-  catch(e) { toast('Erreur : ' + e.message, 'error'); }
+  if (!confirm('Supprimer ce livre ? Il sera retiré du planning.')) return;
+  try {
+    await deleteDoc(doc(db,C_BOOKS,id));
+    // Remove from all schedule days
+    for (let i=0;i<7;i++) {
+      const sRef = doc(db,C_SCHEDULE,String(i));
+      const sSnap = await getDoc(sRef);
+      if (sSnap.exists()) {
+        const ids = (sSnap.data().bookIds||[]).filter(x=>x!==id);
+        await updateDoc(sRef,{bookIds:ids});
+      }
+    }
+    await refreshBooksCache();
+    toast('Livre supprimé','');
+    loadAdminBooks(); loadScheduleGrid();
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
+}
+
+async function loadAdminBooks() {
+  const c = document.getElementById('admin-books-list');
+  c.innerHTML='<p style="color:var(--text3);font-size:13px">Chargement...</p>';
+  try {
+    if (allBooks.length===0) {
+      c.innerHTML='<p style="color:var(--text3);font-size:13px">Aucun livre. Ajoutez-en ci-dessus.</p>'; return;
+    }
+    c.innerHTML='';
+    // Get schedule to show days per book
+    const scheduleByBook = {};
+    for (let i=0;i<7;i++) {
+      const sSnap = await getDoc(doc(db,C_SCHEDULE,String(i)));
+      if (sSnap.exists()) {
+        (sSnap.data().bookIds||[]).forEach(bid=>{
+          if (!scheduleByBook[bid]) scheduleByBook[bid]=[];
+          scheduleByBook[bid].push(i);
+        });
+      }
+    }
+    allBooks.forEach(b => {
+      const days = scheduleByBook[b.id]||[];
+      const item = document.createElement('div');
+      item.className='book-list-item';
+      const daysHtml = days.map(d=>`<span class="day-chip">${DAYS_FR[d]}</span>`).join('');
+      item.innerHTML=`
+        <div style="font-size:24px">${b.icon||'📖'}</div>
+        <div class="book-list-info">
+          <div class="book-list-title">${b.title}</div>
+          <div class="book-list-meta">${b.author||'–'}</div>
+          ${days.length>0?`<div class="book-list-days">${daysHtml}</div>`:'<div style="margin-top:4px;font-size:11px;color:var(--text3)">Non planifié</div>'}
+        </div>
+      `;
+      const del=document.createElement('button'); del.className='btn btn-red btn-sm'; del.textContent='🗑';
+      del.addEventListener('click',()=>deleteBook(b.id));
+      item.appendChild(del);
+      c.appendChild(item);
+    });
+  } catch(e) { c.innerHTML='<p style="color:var(--text3)">Erreur</p>'; console.error(e); }
+}
+
+// ── SCHEDULE GRID ──
+async function loadScheduleGrid() {
+  const grid = document.getElementById('schedule-grid');
+  grid.innerHTML = '';
+
+  for (let i=0;i<7;i++) {
+    const sSnap   = await getDoc(doc(db,C_SCHEDULE,String(i)));
+    const bookIds = sSnap.exists() ? (sSnap.data().bookIds||[]) : [];
+    const books   = bookIds.map(bid=>allBooks.find(x=>x.id===bid)).filter(Boolean);
+
+    const dayEl = document.createElement('div');
+    dayEl.className = 'schedule-day';
+
+    const dayHeader = document.createElement('div');
+    dayHeader.className = 'schedule-day-header';
+    dayHeader.innerHTML = `
+      <div class="schedule-day-name">${DAYS_FR[i]}</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="schedule-day-count">${books.length} livre${books.length>1?'s':''}</div>
+        <button class="btn btn-primary btn-sm" data-day="${i}">+ Ajouter</button>
+      </div>
+    `;
+
+    const booksEl = document.createElement('div');
+    booksEl.className = 'schedule-day-books';
+
+    if (books.length===0) {
+      booksEl.innerHTML='<p style="color:var(--text3);font-size:12px;padding:4px 0">Aucun livre ce jour.</p>';
+    } else {
+      books.forEach(b => {
+        const item = document.createElement('div');
+        item.className='schedule-book-item';
+        item.innerHTML=`<div class="book-icon">${b.icon||'📖'}</div><div class="book-name">${b.title}</div>`;
+        const rm=document.createElement('button'); rm.className='btn btn-ghost btn-sm'; rm.textContent='✕';
+        rm.addEventListener('click',async(e)=>{
+          e.stopPropagation();
+          const newIds=bookIds.filter(x=>x!==b.id);
+          await setDoc(doc(db,C_SCHEDULE,String(i)),{bookIds:newIds});
+          toast(`"${b.title}" retiré du ${DAYS_FR[i]}`,'');
+          loadScheduleGrid(); loadAdminBooks();
+        });
+        item.appendChild(rm);
+        booksEl.appendChild(item);
+      });
+    }
+
+    // Toggle open/close
+    dayHeader.addEventListener('click', e => {
+      if (e.target.closest('button[data-day]')) return;
+      booksEl.classList.toggle('open');
+    });
+
+    // Assign book button
+    dayHeader.querySelector('button[data-day]').addEventListener('click', e => {
+      e.stopPropagation();
+      openScheduleModal(i, bookIds);
+    });
+
+    dayEl.appendChild(dayHeader);
+    dayEl.appendChild(booksEl);
+    grid.appendChild(dayEl);
+  }
+}
+
+// ── SCHEDULE MODAL ──
+function openScheduleModal(dayIndex, currentBookIds) {
+  scheduleCtx = {dayIndex, currentBookIds};
+  document.getElementById('schedule-day-info').textContent = `Ajouter un livre au ${DAYS_FR[dayIndex]}`;
+  const sel = document.getElementById('schedule-book-select');
+  sel.innerHTML='';
+  const available = allBooks.filter(b=>!currentBookIds.includes(b.id));
+  if (available.length===0) {
+    sel.innerHTML='<option disabled>Tous les livres sont déjà planifiés ce jour</option>';
+  } else {
+    available.forEach(b=>{
+      const opt=document.createElement('option'); opt.value=b.id; opt.textContent=`${b.icon||'📖'} ${b.title}`;
+      sel.appendChild(opt);
+    });
+  }
+  openModal('modal-schedule');
+}
+
+async function doScheduleAssign() {
+  if (!scheduleCtx) return;
+  const bookId = document.getElementById('schedule-book-select').value;
+  if (!bookId) return;
+  try {
+    const newIds = [...scheduleCtx.currentBookIds, bookId];
+    await setDoc(doc(db,C_SCHEDULE,String(scheduleCtx.dayIndex)),{bookIds:newIds});
+    const book = allBooks.find(b=>b.id===bookId);
+    closeModal('modal-schedule');
+    toast(`"${book?.title}" ajouté au ${DAYS_FR[scheduleCtx.dayIndex]} !`,'success');
+    loadScheduleGrid(); loadAdminBooks();
+  } catch(e) { toast('Erreur : '+e.message,'error'); }
 }
 
 // ── MEMBERS ──
 async function loadMembers() {
-  const grid = document.getElementById('members-grid');
-  grid.innerHTML = '';
+  const grid=document.getElementById('members-grid'); grid.innerHTML='';
   try {
-    const snap = await getDocs(collection(db, C_MEMBERS));
-    document.getElementById('members-count').textContent = snap.size + ' membre' + (snap.size > 1 ? 's' : '');
-    snap.forEach(d => {
-      const m    = d.data();
-      const card = document.createElement('div');
-      card.className = 'member-card' + (m.isAdmin ? ' is-admin' : '');
-      card.innerHTML = `
-        <div class="member-avatar">${initials(m.name)}</div>
-        <div class="member-name">${m.name} ${m.isAdmin ? '<span class="admin-badge">Admin</span>' : ''}</div>
-        <div class="member-role">${m.isAdmin ? 'Administrateur' : 'Membre actif'}</div>
-      `;
+    const snap=await getDocs(collection(db,C_MEMBERS));
+    document.getElementById('members-count').textContent=snap.size+' membre'+(snap.size>1?'s':'');
+    snap.forEach(d=>{
+      const m=d.data();
+      const card=document.createElement('div'); card.className='member-card'+(m.isAdmin?' is-admin':'');
+      card.innerHTML=`<div class="member-avatar">${initials(m.name)}</div>
+        <div class="member-name">${m.name} ${m.isAdmin?'<span class="admin-badge">Admin</span>':''}</div>
+        <div class="member-role">${m.isAdmin?'Administrateur':'Membre actif'}</div>`;
       grid.appendChild(card);
     });
   } catch(e) { console.error(e); }
 }
 
 // ── EVENT LISTENERS ──
-document.getElementById('btn-rejoindre').addEventListener('click', () => {
-  loginWith(document.getElementById('pseudo-input').value);
-});
-document.getElementById('pseudo-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') loginWith(document.getElementById('pseudo-input').value);
-});
-document.getElementById('btn-logout').addEventListener('click', logout);
-document.getElementById('tab-today').addEventListener('click',   () => switchTab('today'));
-document.getElementById('tab-members').addEventListener('click', () => switchTab('members'));
-document.getElementById('tab-admin').addEventListener('click',   () => switchTab('admin'));
-document.getElementById('btn-prev-day').addEventListener('click', () => changeDay(-1));
-document.getElementById('btn-next-day').addEventListener('click', () => changeDay(1));
-document.getElementById('btn-reserve-cancel').addEventListener('click',  () => closeModal('modal-reserve'));
-document.getElementById('btn-reserve-confirm').addEventListener('click', doReserve);
-document.getElementById('btn-confirm-cancel').addEventListener('click',  () => closeModal('modal-confirm'));
-document.getElementById('btn-confirm-ok').addEventListener('click',      doConfirm);
-document.getElementById('btn-add-part').addEventListener('click', () => {
-  partFields.push({ label: '', description: '' });
-  renderPartFields();
-});
-document.getElementById('btn-admin-add-book').addEventListener('click', adminAddBook);
+document.getElementById('btn-rejoindre').addEventListener('click',()=>loginWith(document.getElementById('pseudo-input').value));
+document.getElementById('pseudo-input').addEventListener('keydown',e=>{ if(e.key==='Enter') loginWith(document.getElementById('pseudo-input').value); });
+document.getElementById('btn-logout').addEventListener('click',logout);
+document.getElementById('tab-today').addEventListener('click',()=>switchTab('today'));
+document.getElementById('tab-members').addEventListener('click',()=>switchTab('members'));
+document.getElementById('tab-admin').addEventListener('click',()=>switchTab('admin'));
+document.getElementById('btn-prev-day').addEventListener('click',()=>changeDay(-1));
+document.getElementById('btn-next-day').addEventListener('click',()=>changeDay(1));
+document.getElementById('btn-reserve-cancel').addEventListener('click',()=>closeModal('modal-reserve'));
+document.getElementById('btn-reserve-confirm').addEventListener('click',doReserve);
+document.getElementById('btn-confirm-cancel').addEventListener('click',()=>closeModal('modal-confirm'));
+document.getElementById('btn-confirm-ok').addEventListener('click',doConfirm);
+document.getElementById('btn-add-part').addEventListener('click',()=>{ partFields.push({label:'',description:''}); renderPartFields(); });
+document.getElementById('btn-admin-add-book').addEventListener('click',adminAddBook);
+document.getElementById('btn-schedule-cancel').addEventListener('click',()=>closeModal('modal-schedule'));
+document.getElementById('btn-schedule-confirm').addEventListener('click',doScheduleAssign);
 
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); });
 });
+
+// ── FIRESTORE RULES REMINDER ──
+// Ajouter dans Firestore Rules :
+// match /bt_schedule/{docId} { allow read, write: if true; }
 
 // ── START ──
 init();
