@@ -610,25 +610,36 @@ async function loadBooks() {
   });
 
   // Live updates: listen to reservations for this date
+  let snapToken = 0;
   const q = query(collection(db, C_RES), where('date','==',currentDateStr));
   booksUnsub = onSnapshot(q, async () => {
     if (myTok !== renderToken) return;
-    // Reload silently
+    snapToken++;
+    const mySnapTok = snapToken;
+
     const newOpen = new Set();
     document.querySelectorAll('.parts-container.open').forEach(el=>newOpen.add(el.dataset.bookId));
 
-    grid.innerHTML = '';
+    const newCards = [];
     for (const {book, parts} of scheduled) {
       const rSnap2 = await getDocs(query(collection(db,C_RES),where('bookId','==',book.id),where('date','==',currentDateStr)));
       const res2={};
       rSnap2.forEach(r=>{ const d=r.data(); if(!res2[d.partId])res2[d.partId]=[]; res2[d.partId].push({id:r.id,...d}); });
+      newCards.push({book, parts, res2});
+    }
+
+    // Abort if a newer snapshot came in while we were awaiting
+    if (mySnapTok !== snapToken || myTok !== renderToken) return;
+
+    grid.innerHTML = '';
+    newCards.forEach(({book, parts, res2}) => {
       const card = buildBookCard(book, parts, res2);
       grid.appendChild(card);
       if (newOpen.has(book.id)) {
         card.querySelector('.parts-container')?.classList.add('open');
         card.querySelector('.book-chevron')?.classList.add('open');
       }
-    }
+    });
   }, err => console.error(err));
 }
 
